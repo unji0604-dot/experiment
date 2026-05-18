@@ -785,7 +785,7 @@
 
   <div id="mcSocialDiv">
     <div class="question">
-      <div class="question-text">세트 4를 학습하는 동안 옆의 참가자가 어떻게 하고 있는지 신경 쓰였다</div>
+      <div class="question-text">세트 4를 학습하는 동안 이 실험에 참여한 다른 참가자는 어떻게 하고 있는지 신경 쓰였다</div>
       <div class="likert5">
         <label><input type="radio" name="mc_social1" value="1"><span>전혀<br>그렇지 않다</span></label>
         <label><input type="radio" name="mc_social1" value="2"><span>그렇지<br>않다</span></label>
@@ -820,7 +820,7 @@
 
   <div id="mcCompDiv">
     <div class="question">
-      <div class="question-text">세트 4를 학습하는 동안 옆의 참가자와 나를 비교하게 되었다</div>
+      <div class="question-text">세트 4를 학습하는 동안 이 실험에 참여한 다른 참가자와 나를 비교하게 되었다</div>
       <div class="likert5">
         <label><input type="radio" name="mc_social2" value="1"><span>전혀<br>그렇지 않다</span></label>
         <label><input type="radio" name="mc_social2" value="2"><span>그렇지<br>않다</span></label>
@@ -830,28 +830,7 @@
       </div>
     </div>
   </div>
-
-  <div id="mcEffortDiv">
-    <div class="question">
-      <div class="question-text">옆의 참가자가 나보다 더 열심히 한 것 같다</div>
-      <div class="likert5">
-        <label><input type="radio" name="mc_effort" value="1"><span>전혀<br>그렇지 않다</span></label>
-        <label><input type="radio" name="mc_effort" value="2"><span>그렇지<br>않다</span></label>
-        <label><input type="radio" name="mc_effort" value="3"><span>보통이다</span></label>
-        <label><input type="radio" name="mc_effort" value="4"><span>그렇다</span></label>
-        <label><input type="radio" name="mc_effort" value="5"><span>매우<br>그렇다</span></label>
-      </div>
-    </div>
-    <div class="question">
-      <div class="question-text">옆의 참가자가 나보다 더 잘 외운 것 같다</div>
-      <div class="likert5">
-        <label><input type="radio" name="mc_perf" value="1"><span>전혀<br>그렇지 않다</span></label>
-        <label><input type="radio" name="mc_perf" value="2"><span>그렇지<br>않다</span></label>
-        <label><input type="radio" name="mc_perf" value="3"><span>보통이다</span></label>
-        <label><input type="radio" name="mc_perf" value="4"><span>그렇다</span></label>
-        <label><input type="radio" name="mc_perf" value="5"><span>매우<br>그렇다</span></label>
-      </div>
-    </div>
+  
     <button class="btn" onclick="saveManipCheck()">다음</button>
   </div>
 </div>
@@ -1611,7 +1590,7 @@ function startSet4() {
   s4start = Date.now();
   s4finishEnabled = false;
   document.getElementById('s4finish').disabled = true;
-  document.getElementById('s4hint').textContent = '충분한 학습 시간이 지나면 버튼이 활성화됩니다';
+  document.getElementById('s4hint').textContent = '일정한 학습 시간이 지나면 버튼이 활성화됩니다';
 
   if (condition !== 'control') {
     document.getElementById('progressArea').style.display = 'block';
@@ -1874,13 +1853,11 @@ function showFeedbackResult() {
 
 // ========== 조작 점검 저장 ==========
 function saveManipCheck() {
-  var items = ['mc_interest','mc_useful','mc_bored','mc_bored2'];
-  if (condition !== 'control') {
-    items = items.concat(['mc_social1','mc_social2','mc_effort','mc_perf']);
-  } else {
-    items = items.concat(['mc_social_c1','mc_social_c2']);
+  var items = ['mc_interest','mc_useful','mc_bored','mc_bored2','mc_social1','mc_social2'];
+  if (!checkRs(items)) { 
+    alert('모든 문항에 응답해 주세요.'); 
+    return; 
   }
-  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
   saveRs(items);
   showPage('p_set5intro');
 }
@@ -2014,7 +1991,7 @@ function updatePartnerS5() {
 
 function checkS5Finish() {
   var elapsed = (Date.now()-s5start)/1000;
-  if (!s5finishEnabled && elapsed >= 5) {
+  if (!s5finishEnabled && elapsed >= 30) {
     s5finishEnabled = true;
     document.getElementById('s5finish').disabled = false;
     document.getElementById('s5hint').textContent = '학습이 모두 완료되었다면 종료해 주세요';

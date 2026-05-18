@@ -833,23 +833,23 @@
 
   <div id="mcEffortDiv">
     <div class="question">
-      <div class="question-text">옆의 참가자가 나보다 더 열심히 한 것 같다</div>
+      <div class="question-text">세트 4에서 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 열심히 한다</u>고 생각했나요?</div>
       <div class="likert5">
-        <label><input type="radio" name="mc_effort" value="1"><span>전혀<br>그렇지 않다</span></label>
-        <label><input type="radio" name="mc_effort" value="2"><span>그렇지<br>않다</span></label>
-        <label><input type="radio" name="mc_effort" value="3"><span>보통이다</span></label>
-        <label><input type="radio" name="mc_effort" value="4"><span>그렇다</span></label>
-        <label><input type="radio" name="mc_effort" value="5"><span>매우<br>그렇다</span></label>
+        <label><input type="radio" name="mc_effort" value="1"><span>1<br><small>훨씬 덜<br>열심히</small></span></label>
+        <label><input type="radio" name="mc_effort" value="2"><span>2</span></label>
+        <label><input type="radio" name="mc_effort" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="mc_effort" value="4"><span>4</span></label>
+        <label><input type="radio" name="mc_effort" value="5"><span>5<br><small>훨씬 더<br>열심히</small></span></label>
       </div>
     </div>
     <div class="question">
-      <div class="question-text">옆의 참가자가 나보다 더 잘 외운 것 같다</div>
+      <div class="question-text">세트 4에서 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 잘 외운다</u>고 생각했나요?</div>
       <div class="likert5">
-        <label><input type="radio" name="mc_perf" value="1"><span>전혀<br>그렇지 않다</span></label>
-        <label><input type="radio" name="mc_perf" value="2"><span>그렇지<br>않다</span></label>
-        <label><input type="radio" name="mc_perf" value="3"><span>보통이다</span></label>
-        <label><input type="radio" name="mc_perf" value="4"><span>그렇다</span></label>
-        <label><input type="radio" name="mc_perf" value="5"><span>매우<br>그렇다</span></label>
+        <label><input type="radio" name="mc_perf" value="1"><span>1<br><small>훨씬<br>못함</small></span></label>
+        <label><input type="radio" name="mc_perf" value="2"><span>2</span></label>
+        <label><input type="radio" name="mc_perf" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="mc_perf" value="4"><span>4</span></label>
+        <label><input type="radio" name="mc_perf" value="5"><span>5<br><small>훨씬 더<br>잘함</small></span></label>
       </div>
     </div>
     <button class="btn" onclick="saveManipCheck()">다음</button>
@@ -1056,26 +1056,22 @@
   <div id="postCompDiv" style="display:none;">
     <div class="question">
       <div class="question-text">마지막 세트(세트5)를 학습할 때 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 열심히 한다</u>고 생각했나요?</div>
-      <div class="likert7">
+      <div class="likert5">
         <label><input type="radio" name="effort_comp" value="1"><span>1<br><small>훨씬 덜<br>열심히</small></span></label>
         <label><input type="radio" name="effort_comp" value="2"><span>2</span></label>
-        <label><input type="radio" name="effort_comp" value="3"><span>3</span></label>
-        <label><input type="radio" name="effort_comp" value="4"><span>4<br><small>비슷</small></span></label>
-        <label><input type="radio" name="effort_comp" value="5"><span>5</span></label>
-        <label><input type="radio" name="effort_comp" value="6"><span>6</span></label>
-        <label><input type="radio" name="effort_comp" value="7"><span>7<br><small>훨씬 더<br>열심히</small></span></label>
+        <label><input type="radio" name="effort_comp" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="effort_comp" value="4"><span>4</span></label>
+        <label><input type="radio" name="effort_comp" value="5"><span>5<br><small>훨씬 더<br>열심히</small></span></label>
       </div>
     </div>
     <div class="question">
       <div class="question-text">마지막 세트(세트5)를 학습할 때 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 잘 외운다</u>고 생각했나요?</div>
-      <div class="likert7">
+      <div class="likert5">
         <label><input type="radio" name="perf_comp" value="1"><span>1<br><small>훨씬<br>못함</small></span></label>
         <label><input type="radio" name="perf_comp" value="2"><span>2</span></label>
-        <label><input type="radio" name="perf_comp" value="3"><span>3</span></label>
-        <label><input type="radio" name="perf_comp" value="4"><span>4<br><small>비슷</small></span></label>
-        <label><input type="radio" name="perf_comp" value="5"><span>5</span></label>
-        <label><input type="radio" name="perf_comp" value="6"><span>6</span></label>
-        <label><input type="radio" name="perf_comp" value="7"><span>7<br><small>훨씬 더<br>잘함</small></span></label>
+        <label><input type="radio" name="perf_comp" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="perf_comp" value="4"><span>4</span></label>
+        <label><input type="radio" name="perf_comp" value="5"><span>5<br><small>훨씬 더<br>잘함</small></span></label>
       </div>
     </div>
   </div>
@@ -1611,7 +1607,7 @@ function startSet4() {
   s4start = Date.now();
   s4finishEnabled = false;
   document.getElementById('s4finish').disabled = true;
-  document.getElementById('s4hint').textContent = '충분한 학습 시간이 지나면 버튼이 활성화됩니다';
+  document.getElementById('s4hint').textContent = '일정한 학습 시간이 지나면 버튼이 활성화됩니다';
 
   if (condition !== 'control') {
     document.getElementById('progressArea').style.display = 'block';
@@ -2013,7 +2009,7 @@ function updatePartnerS5() {
 
 function checkS5Finish() {
   var elapsed = (Date.now()-s5start)/1000;
-  if (!s5finishEnabled && elapsed >= 5) {
+  if (!s5finishEnabled && elapsed >= 30) {
     s5finishEnabled = true;
     document.getElementById('s5finish').disabled = false;
     document.getElementById('s5hint').textContent = '학습이 모두 완료되었다면 종료해 주세요';
