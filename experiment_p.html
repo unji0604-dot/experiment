@@ -84,7 +84,7 @@
   .page-indicator { font-size: 12px; color: #bbb; text-align: right; margin-bottom: 16px; }
   .info-box { background: #f0f7ff; border-left: 4px solid #2E75B6; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; line-height: 1.7; }
   /* 학습 화면 */
-  .study-container {  position: relative; text-align: center; }
+  .study-container { position: relative;text-align: center; }
   .study-title { font-size: 18px; font-weight: 700; color: #1B2A4A; margin-bottom: 20px; }
   .study-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: left; }
  .study-table th { background: #2E75B6; color: white; padding: 10px 14px; font-size: 13px; text-align: center; }
@@ -95,17 +95,8 @@
   .timer-display { font-size: 48px; font-weight: 700; color: #2E75B6; margin: 20px 0; }
   .timer-label { font-size: 14px; color: #999; margin-bottom: 8px; }
   /* 프로그레스 바 */
-  .progress-section { background: #1B2A4A; padding: 20px 28px; border-radius: 0 0 0 0; margin: 0 -40px 0 -40px; display: flex; gap: 24px; }
-  .progress-group { flex: 1; }
-  .progress-label { font-size: 15px; color: #8899BB; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-  .progress-label .dot { width: 10px; height: 8px; border-radius: 50%; }
   .dot-me { background: #2E75B6; }
   .dot-partner { background: #E8593C; }
-  .progress-track { width: 100%; height: 14px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; position: relative; }
-  .progress-fill { height: 100%; border-radius: 4px; transition: width 0.4s ease; position: absolute; top: 0; left: 0; }
-  .fill-me { background: #2E75B6; }
-  .fill-partner { background: #E8593C; }
-  .progress-ptext { font-size: 14px; margin-top: 4px; color: rgba(255,255,255,0.4); }
   .set4-content { padding-top: 28px; }
   .term-card { background: #f8f9fb; border: 1px solid #e8eaee; border-radius: 12px; padding: 32px; text-align: center; min-height: 140px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
   .term-word { font-size: 28px; font-weight: 700; color: #1B2A4A; }
@@ -131,7 +122,7 @@
 <body>
 
 <!-- ==================== 페이지 1: 연구 안내 ==================== -->
-<div class="page active" id="p_intro">
+<div class="page" id="p_intro">
   <h2>연구 참여 안내</h2>
   <div class="subtitle">온라인 자료 확인 경험 연구</div>
   <p>안녕하세요. 본 연구에 참여해 주셔서 감사합니다.</p>
@@ -510,7 +501,7 @@
 </div>
 
 <!-- ==================== 세트 4 지시문 ==================== -->
-<div class="page" id="p_set4intro">
+<div class="page active" id="p_set4intro">
   <h2>다음 학습 안내</h2>
   <div class="info-box" style="font-size:18px;">
     <p>앞에서와 마찬가지로 10개의 용어-정의 쌍을 학습합니다.</p>
@@ -527,21 +518,26 @@
 
 <!-- ==================== 세트 4 학습 ==================== -->
 <div class="page" id="p_set4">
-  <div id="progressArea" style="display:none;">
-    <div style="background:#1B2A4A; margin:-40px -40px 0 -40px; padding:16px 28px 0 28px; font-size:18px; font-weight:700; color:#fff; text-align:center;">세트 4</div>
-    <div class="progress-section">
-      <div class="progress-group">
-        <div class="progress-label"><span class="dot dot-me"></span> A 참가자(나) 진행상황</div>
-        <div class="progress-track"><div class="progress-fill fill-me" id="myProg" style="width:10%"></div></div>
-        <div class="progress-ptext" id="myProgText">1 / 10</div>
-      </div>
-      <div class="progress-group" id="partnerGroup">
-        <div class="progress-label"><span class="dot dot-partner"></span> B 참가자(상대방) 진행상황</div>
-        <div class="progress-track"><div class="progress-fill fill-partner" id="partnerProg" style="width:10%"></div></div>
-        <div class="progress-ptext" id="partnerProgText">1 / 10</div>
-      </div>
-    </div>
-  </div>
+<div id="progressArea" style="display:none;">
+<div style="background:#1B2A4A;padding:20px 28px;margin:0 -40px;display:flex;flex-direction:column;gap:12px;">
+<div style="text-align:center;font-size:16px;color:white;font-weight:700;margin-bottom:8px;">세트 4</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#85B7EB;font-weight:700;">A 참가자(나)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="myProg" style="width:10%;height:22px;background:#2E75B6;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="myProgText" style="width:40px;font-size:14px;color:#85B7EB;">1/10</div>
+</div>
+<div id="partnerGroup" style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#E8593C;font-weight:700;">B 참가자(상대방)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="partnerProg" style="width:10%;height:22px;background:#E8593C;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="partnerProgText" style="width:40px;font-size:14px;color:#E8593C;">1/10</div>
+</div>
+</div>
+</div>
+
   <div class="set4-content">
     <div class="study-title" id="s4title" style="margin-bottom:16px;">세트 4</div>
     <div style="font-size:13px;color:#999;margin-bottom:16px;" id="s4counter">1 / 10</div>
@@ -764,6 +760,7 @@
   <h2>학습 경험 설문</h2>
   <div class="subtitle" style="color:#333;font-size:18px;">세트 4에서의 학습 경험에 대해 응답해 주세요.</div>
 
+  
   <div class="question">
     <div class="question-text">세트 4에서 학습한 용어들이 나에게 유용하다고 느껴졌다</div>
     <div class="likert5">
@@ -855,7 +852,7 @@
         <label><input type="radio" name="mc_perf" value="5"><span>매우<br>그렇다</span></label>
       </div>
     </div>
-  <button class="btn" onclick="saveManipCheck()">다음</button>
+    <button class="btn" onclick="saveManipCheck()">다음</button>
   </div>
 </div>
 
@@ -885,21 +882,25 @@
 
 <!-- ==================== 세트 5 학습 ==================== -->
 <div class="page" id="p_set5">
-  <div id="progressAreaS5" style="display:none;">
-    <div style="background:#1B2A4A; margin:-40px -40px 0 -40px; padding:16px 28px 0 28px; font-size:18px; font-weight:700; color:#fff; text-align:center;">세트 5</div>
-    <div class="progress-section">
-      <div class="progress-group">
-        <div class="progress-label"><span class="dot dot-me"></span> A 참가자(나) 진행상황</div>
-        <div class="progress-track"><div class="progress-fill fill-me" id="myProgS5" style="width:10%"></div></div>
-        <div class="progress-ptext" id="myProgTextS5">1 / 10</div>
-      </div>
-      <div class="progress-group" id="partnerGroupS5">
-        <div class="progress-label"><span class="dot dot-partner"></span> B 참가자(상대방) 진행상황</div>
-        <div class="progress-track"><div class="progress-fill fill-partner" id="partnerProgS5" style="width:10%"></div></div>
-        <div class="progress-ptext" id="partnerProgTextS5">1 / 10</div>
-      </div>
-    </div>
-  </div>
+<div id="progressAreaS5" style="display:none;">
+<div style="background:#1B2A4A;padding:20px 28px;margin:0 -40px;display:flex;flex-direction:column;gap:12px;">
+<div style="text-align:center;font-size:16px;color:white;font-weight:700;margin-bottom:8px;">세트 5</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#85B7EB;font-weight:700;">A 참가자(나)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="myProgS5" style="width:10%;height:22px;background:#2E75B6;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="myProgTextS5" style="width:40px;font-size:14px;color:#85B7EB;">1/10</div>
+</div>
+<div id="partnerGroupS5" style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#E8593C;font-weight:700;">B 참가자(상대방)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="partnerProgS5" style="width:10%;height:22px;background:#E8593C;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="partnerProgTextS5" style="width:40px;font-size:14px;color:#E8593C;">1/10</div>
+</div>
+</div>
+</div>
   <div class="set4-content">
     <div class="study-title" id="s5title" style="margin-bottom:16px;">세트 5</div>
     <div style="font-size:13px;color:#999;margin-bottom:16px;" id="s5counter">1 / 10</div>
@@ -935,7 +936,6 @@
   <div id="quizItems"></div>
   <button class="btn" onclick="saveQuiz()">제출</button>
 </div>
-
 <!-- ==================== 사후 설문 페이지 1: 사회비교 활성화 + 공적 자기인식 ==================== -->
 <div class="page" id="p_post1">
   <h2>학습 경험 설문</h2>
@@ -1038,7 +1038,7 @@
     </div>
   </div>
   <div class="question">
-    <div class="question-text">마지막 세트에(세트5)서 나는 충분히 잘 외웠다고 생각한다</div>
+    <div class="question-text">마지막 세트(세트5)에서 나는 충분히 잘 외웠다고 생각한다</div>
     <div class="likert5">
       <label><input type="radio" name="self_perf" value="1"><span>전혀<br>그렇지 않다</span></label>
       <label><input type="radio" name="self_perf" value="2"><span>그렇지<br>않다</span></label>
@@ -1544,8 +1544,8 @@ function startSet(setNum) {
   document.getElementById('studyTable').innerHTML = tbl;
   showPage('p_study');
 
-  // 타이머 (테스트: 10초)
-  var remaining =360;
+ // 타이머 (테스트: 10초)
+  var remaining = 360;
   document.getElementById('timerDisplay').textContent = '0:' + String(remaining).padStart(2, '0');
 
   if (timerInterval) clearInterval(timerInterval);
@@ -1576,6 +1576,7 @@ function showBetween(setNum) {
   }
   showPage('p_between');
 }
+
 
 // ========== 지루함 ==========
 function saveBoredom() {
@@ -1614,7 +1615,7 @@ function startSet4() {
 
   if (condition !== 'control') {
     document.getElementById('progressArea').style.display = 'block';
-    document.getElementById('partnerGroup').style.display = 'block';
+    document.getElementById('partnerGroup').style.display = 'flex';
     document.getElementById('s4title').style.display = 'none';
   } else {
     document.getElementById('progressArea').style.display = 'block';
@@ -1705,7 +1706,7 @@ function saveSet4Report() {
   if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
   saveRs(items);
 
- if (condition === 'control') {
+  if (condition === 'control') {
     startAnalysisControl();
   } else {
     showPage('p_waitPartner');
@@ -1841,31 +1842,35 @@ function startAnalysisControl() {
   }
   nextStep();
 }
-
-
 function showFeedbackResult() {
   var fbDiv = document.getElementById('feedbackMsg');
   if (condition === 'effort') {
-    fbDiv.innerHTML = '<p style="font-size:15px;color:#555;margin-bottom:20px;">두 참가자의 화면 이동 패턴 및 체류 시간을 종합하여 분석한 결과</p>'
-+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="width:60px;text-align:right;font-size:14px;color:#2E75B6;">A 참가자(나)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:43%;height:100%;background:#2E75B6;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#2E75B6;">4.3 / 10</span></div>'
-+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;"><span style="width:60px;text-align:right;font-size:14px;color:#E8593C;font-weight:700;">B 참가자(상대방)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:83%;height:100%;background:#E8593C;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#E8593C;">8.3 / 10</span></div>'
-+ '<p style="font-size:17px;line-height:1.8;">B 참가자(상대방)가 더 오랜 시간 페이지에 머무름으로써 A 참가자(나)보다 <strong>더 많은 노력을 기울인</strong> 것으로 나타났습니다.</p>';
-document.getElementById('feedbackTitle').textContent = '학습 노력 비교 결과'; 
-fbDiv.style.display = 'block';  
-} else if (condition === 'performance') {
-    fbDiv.innerHTML = '<p style="font-size:15px;color:#555;margin-bottom:20px;">두 참가자의 학습 경험 응답(예, 암기도, 이해도)을 종합하여 분석한 결과</p>'
-+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="width:60px;text-align:right;font-size:14px;color:#2E75B6;">A 참가자(나)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:43%;height:100%;background:#2E75B6;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#2E75B6;">4.3 / 10</span></div>'
-+ '<div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;"><span style="width:60px;text-align:right;font-size:14px;color:#E8593C;font-weight:700;">B 참가자(상대방)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:83%;height:100%;background:#E8593C;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#E8593C;">8.3 / 10</span></div>'
-+ '<p style="font-size:17px;line-height:1.8;">B 참가자(상대방)가 더 많은 내용을 암기하고 이해했다고 응답함으로써 A 참가자(나)보다 <strong>더 높은 수행도를 보인</strong> 것으로 나타났습니다.</p>';
-   document.getElementById('feedbackTitle').textContent = '학습 성취 비교 결과';
-fbDiv.style.display = 'block'; 
+    fbDiv.innerHTML = '<p style="font-size:15px;color:#555;margin-bottom:20px;">화면 이동 패턴 및 체류시간을 분석한 결과</p>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="width:80px;text-align:right;font-size:14px;color:#2E75B6;font-weight:700;">A 참가자<br>(나)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:43%;height:100%;background:#2E75B6;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#2E75B6;">4.3/10</span></div>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="width:80px;text-align:right;font-size:14px;color:#E8593C;font-weight:700;">B 참가자<br>(상대방)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:83%;height:100%;background:#E8593C;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#E8593C;">8.3/10</span></div>'
+    + '<div style="font-size:13px;color:#555;line-height:2.2;border-top:1px solid #ccc;padding-top:12px;text-align:center;">'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>체류 시간</span><span style="font-weight:700;">B &gt; A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>이동 횟수</span><span style="font-weight:700;">B ≈ A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>학습 지속</span><span style="font-weight:700;">B &gt; A</span></div></div>'
+    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">종합적으로 현재까지 B 참가자가<br>A 참가자보다 <strong style="color:#2E75B6;">더 많은 노력을 기울인</strong> 것으로<br>나타났습니다.</p>';
+    document.getElementById('feedbackTitle').textContent = '과재 노력 정도 비교 결과';
+    fbDiv.style.display = 'block';
+  } else if (condition === 'performance') {
+    fbDiv.innerHTML = '<p style="font-size:15px;color:#555;margin-bottom:20px;">과제 이해도 및 암기도를 분석한 결과</p>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="width:80px;text-align:right;font-size:14px;color:#2E75B6;font-weight:700;">A 참가자<br>(나)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:43%;height:100%;background:#2E75B6;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#2E75B6;">4.3/10</span></div>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="width:80px;text-align:right;font-size:14px;color:#E8593C;font-weight:700;">B 참가자<br>(상대방)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:83%;height:100%;background:#E8593C;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#E8593C;">8.3/10</span></div>'
+    + '<div style="font-size:13px;color:#555;line-height:2.2;border-top:1px solid #ccc;padding-top:12px;text-align:center;">'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>학습 효율</span><span style="font-weight:700;">B &gt; A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>암기 정도</span><span style="font-weight:700;">B &gt; A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>이해도</span><span style="font-weight:700;">B ≈ A</span></div></div>'
+    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">종합적으로 현재까지 B 참가자가<br>A 참가자보다 <strong style="color:#2E75B6;">더 잘 외우는</strong> 것으로<br>나타났습니다.</p>';
+    document.getElementById('feedbackTitle').textContent = '과제 수행도 비교 결과';
+    fbDiv.style.display = 'block';
   }
-  // control 조건: feedbackMsg가 display:none 유지
 
   document.getElementById('feedbackNextBtn').style.display = 'inline-block';
   showPage('p_feedback');
 }
-
 // ========== 조작 점검 저장 ==========
 function saveManipCheck() {
   var items = ['mc_interest','mc_useful','mc_bored','mc_bored2'];
@@ -1954,7 +1959,7 @@ function startSet5() {
     document.getElementById('s5title').style.display = 'block';
   } else {
     document.getElementById('progressAreaS5').style.display = 'block';
-    document.getElementById('partnerGroupS5').style.display = 'block';
+   document.getElementById('partnerGroupS5').style.display = 'flex';
     document.getElementById('s5title').style.display = 'none';
   }
 
