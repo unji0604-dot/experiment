@@ -750,7 +750,7 @@
     <h2 id="feedbackTitle">학습 패턴 분석 완료</h2>
     <div id="feedbackMsg" style="display:none;background:#EEF4FB;border:2px solid #2E75B6;border-radius:12px;padding:28px 32px;margin:40px auto;max-width:600px;font-size:18px;font-weight:600;line-height:1.8;color:#1B2A4A;text-align:center;">
     </div>
-    <p id="feedbackNextMsg" style="margin-top:40px;color:#555;">다음 세트도 동일한 방식으로 학습해주세요.</p>
+    <p id="feedbackNextMsg" style="margin-top:40px;color:#555;">다음 세트 시작 전, 세트 4에서의 학습 경험에 대해 응답해 주세요.</p>
     <button class="btn" id="feedbackNextBtn" style="display:none;" onclick="showPage('p_manipcheck')">다음</button>
   </div>
 </div>
@@ -1805,7 +1805,7 @@ function startAnalysisControl() {
     if (stepIdx >= steps.length) {
       setTimeout(function() {
         showPage('p_feedback');
-        document.getElementById('feedbackNextMsg').textContent = '다음 세트도 동일한 방식으로 학습해주세요.';
+        document.getElementById('feedbackNextMsg').textContent = '다음 세트 시작 전, 세트 4에서의 학습 경험에 대해 응답해 주세요.';
         document.getElementById('feedbackNextBtn').style.display = 'inline-block';
         document.getElementById('feedbackNextBtn').onclick = function() { showPage('p_manipcheck'); };
       }, 500);
