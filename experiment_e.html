@@ -260,7 +260,7 @@
     <br>
     <p>해당 내용에 대한 평가는 없으며, 자신의 경험에 집중하며 <strong>눈으로 보면서 조용히</strong> 학습해 주세요</p>
     <br>
-    <p> 한 세트당 6분 간 학습하게 되며, 제한 시간이 끝나면 화면은 자동으로 넘어갑니다.</p>
+    <p> 한 세트당 7분 간 학습하게 되며, 제한 시간이 끝나면 화면은 자동으로 넘어갑니다.</p>
     <br>
     <br>
     <br>
@@ -1280,35 +1280,22 @@
 
 <!-- ==================== 추가 연구 참여 의향 ==================== -->
 <div class="page" id="p_followup">
-  <h2>추가 연구 참여 안내</h2>
-  <div class="subtitle" style="color:#333;">
-    추가 연구 참여를 원하는 경우에만 아래 문항을 작성해 주세요.
-  </div>
-
+  <h2>추가 학습 안내</h2>
   <div class="info-box">
-    <p>오늘 확인한 용어보다 조금 더 심화된 용어를 배우는 추가 실험이 다음 주에 진행될 예정입니다.</p>
-    <p>참여할 의향이 있으신 경우, 이름, 이메일 주소, 참여 가능한 시간을 적어 주세요.</p>
-    <p style="color:#777;font-size:14px;">참여를 원하지 않으시면 비워둔 채 제출해 주세요.</p>
-  </div>
-
+    <p>오늘 학습한 용어들에 대해 <strong>더 자세히 정리된 심화 학습 자료</strong>가 준비되어 있습니다.</p>
+    <p>심화 학습은 약 <strong>10분</strong> 정도 소요됩니다.</p>
+    <p>관심이 있으신 분만 자유롭게 참여하시면 됩니다.</p>
+    <p>원하지 않으시면 '아니오'를 선택해 주세요.</p>
+</div>
   <div class="question">
-    <div class="question-text">이름</div>
-    <input type="text" class="text-input" id="followup_name" placeholder="이름">
+    <div class="question-text">추가 학습 자료를 학습하시겠습니까?</div>
+    <div class="likert5" style="justify-content:center;gap:20px;">
+      <label style="flex:none;width:120px;"><input type="radio" name="extra_study" value="yes"><span>예</span></label>
+      <label style="flex:none;width:120px;"><input type="radio" name="extra_study" value="no"><span>아니오</span></label>
+    </div>
   </div>
-
-  <div class="question">
-    <div class="question-text">이메일 주소</div>
-    <input type="text" class="text-input" id="followup_email" placeholder="이메일 주소">
-  </div>
-
-  <div class="question">
-    <div class="question-text">다음 주 중 참여 가능한 시간</div>
-    <input type="text" class="text-input" id="followup_time" placeholder="예: 화요일 오후 2시 이후, 수요일 오전">
-  </div>
-
   <button class="btn" onclick="saveFollowup()">제출</button>
 </div>
-
 
 <!-- ==================== 완료 + 데이터 저장 ==================== -->
 <div class="page" id="p_end">
@@ -1545,7 +1532,7 @@ function startSet(setNum) {
   showPage('p_study');
 
  // 타이머 (테스트: 10초)
-  var remaining = 360;
+  var remaining = 420;
   document.getElementById('timerDisplay').textContent = '0:' + String(remaining).padStart(2, '0');
 
   if (timerInterval) clearInterval(timerInterval);
@@ -2182,9 +2169,8 @@ function savePost() {
 }
 
 function saveFollowup() {
-  data.followup_name = document.getElementById('followup_name').value.trim();
-  data.followup_email = document.getElementById('followup_email').value.trim();
-  data.followup_time = document.getElementById('followup_time').value.trim();
+  if (!getR('extra_study')) { alert('응답해 주세요.'); return; }
+  data.extra_study = getR('extra_study');
   sendToGoogleSheets();
   downloadCSV();
   showPage('p_end');
