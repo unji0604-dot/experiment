@@ -1967,6 +1967,7 @@ function sendToGoogleSheets() {
   data.timestamp = new Date().toLocaleString('ko-KR');
   fetch(url, {
     method: 'POST',
+    mode: 'no-cors',
     body: JSON.stringify(data)
   });
 }
