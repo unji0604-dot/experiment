@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>학습 경험 연구</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f0f2f5;
+    padding: 40px 20px;
+  }
+  .page {
+    display: none;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    width: 720px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  .page.active { display: block; }
+  h2 { font-size: 22px; margin-bottom: 8px; color: #1B2A4A; }
+  .subtitle { font-size: 14px; color: #888; margin-bottom: 28px; line-height: 1.6; }
+  p { margin-bottom: 16px; line-height: 1.7; color: #333; font-size: 15px; }
+  .question { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f0f0f0; }
+  .question:last-of-type { border-bottom: none; }
+  .question-text { font-size: 15px; color: #333; margin-bottom: 12px; line-height: 1.5; }
+  .likert5 { display: flex; gap: 6px; }
+  .likert5 label { flex: 1; text-align: center; padding: 10px 2px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+  .likert5 label:hover { border-color: #aaa; }
+  .likert5 input[type="radio"] { display: none; }
+  
+  .likert7 { display: flex; gap: 4px; }
+  .likert7 label { flex: 1; text-align: center; padding: 10px 2px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+  .likert7 label:hover { border-color: #aaa; }
+  .likert7 input[type="radio"] { display: none; }
+  
+
+  .likert10 { display: flex; gap: 3px; }
+  .likert10 label { flex: 1; text-align: center; padding: 8px 1px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.2s; line-height: 1.3; }
+  .likert10 label:hover { border-color: #aaa; }
+  .likert10 input[type="radio"] { display: none; }
+  .likert5 label:has(input[type="radio"]:checked),
+.likert7 label:has(input[type="radio"]:checked),
+.likert10 label:has(input[type="radio"]:checked) {
+  background: #2E75B6;
+  color: white;
+  border-color: #2E75B6;
+}
+
+.likert5 label:has(input[type="radio"]:checked) span,
+.likert7 label:has(input[type="radio"]:checked) span,
+.likert10 label:has(input[type="radio"]:checked) span {
+  color: white;
+  display: block;
+}
+
+
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-group label { padding: 10px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; color: #555; cursor: pointer; transition: all 0.2s; }
+  .radio-group label:hover { border-color: #aaa; }
+  .radio-group input[type="radio"] { display: none; }
+  .radio-group label:has(input[type="radio"]:checked) {
+  background: #2E75B6;
+  color: white;
+  border-color: #2E75B6;
+}
+
+.radio-group label:has(input[type="radio"]:checked) span {
+  color: white;
+  font-weight: 700;
+}
+
+  .text-input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; margin-top: 4px; }
+  .text-input:focus { outline: none; border-color: #2E75B6; }
+  .btn { padding: 14px 40px; background: #2E75B6; color: white; border: none; border-radius: 10px; font-size: 16px; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; cursor: pointer; margin-top: 20px; transition: all 0.2s; }
+  .btn:hover { background: #1a5a96; }
+  .btn:disabled { background: #ccc; color: #999; cursor: not-allowed; }
+  .page-indicator { font-size: 12px; color: #bbb; text-align: right; margin-bottom: 16px; }
+  .info-box { background: #f0f7ff; border-left: 4px solid #2E75B6; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; line-height: 1.7; }
+  /* 학습 화면 */
+  .study-container { position: relative;text-align: center; }
+  .study-title { font-size: 18px; font-weight: 700; color: #1B2A4A; margin-bottom: 20px; }
+  .study-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; text-align: left; }
+ .study-table th { background: #2E75B6; color: white; padding: 10px 14px; font-size: 13px; text-align: center; }
+ .study-table td { padding: 10px 14px; font-size: 13px; border-bottom: 1px solid #eee; text-align: center; }
+ .study-table td:last-child { text-align: left; }
+  .study-table tr:nth-child(even) { background: #f8f9fb; }
+  .study-table .term { font-weight: 700; color: #1B2A4A; white-space: nowrap; }
+  .timer-display { font-size: 48px; font-weight: 700; color: #2E75B6; margin: 20px 0; }
+  .timer-label { font-size: 14px; color: #999; margin-bottom: 8px; }
+  /* 프로그레스 바 */
+  .dot-me { background: #2E75B6; }
+  .dot-partner { background: #E8593C; }
+  .set4-content { padding-top: 28px; }
+  .term-card { background: #f8f9fb; border: 1px solid #e8eaee; border-radius: 12px; padding: 32px; text-align: center; min-height: 140px; display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+  .term-word { font-size: 28px; font-weight: 700; color: #1B2A4A; }
+  .term-def { font-size: 16px; color: #555; line-height: 1.6; }
+  .nav-section { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+  .nav-btn { padding: 10px 24px; border-radius: 8px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; cursor: pointer; border: 1px solid #ddd; background: #fff; color: #333; transition: all 0.2s; }
+  .nav-btn:hover:not(:disabled) { background: #f0f2f5; border-color: #bbb; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-dots { display: flex; gap: 6px; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: #ddd; transition: all 0.2s; cursor: pointer; }
+  .nav-dot.active { background: #2E75B6; transform: scale(1.3); }
+  .nav-dot.visited { background: #a0c4e8; }
+  .finish-section { text-align: center; margin-top: 24px; }
+  .finish-hint { font-size: 12px; color: #999; margin-top: 8px; }
+  /* 퀴즈 */
+  .quiz-input { width: 100%; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 10px; font-size: 16px; font-family: 'Noto Sans KR', sans-serif; margin-top: 8px; }
+  .quiz-input:focus { outline: none; border-color: #2E75B6; }
+  .quiz-def { font-size: 15px; color: #555; line-height: 1.6; background: #f8f9fb; padding: 16px; border-radius: 8px; margin-bottom: 8px; }
+  /* 결과 */
+  .result-box { background: #f0f8ff; padding: 16px; border-radius: 8px; margin-top: 16px; font-size: 12px; color: #555; white-space: pre-wrap; max-height: 300px; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 커버스토리 ==================== -->
+<div class="page active" id="p_cover">
+  <h2>연구 안내</h2>
+
+   <div class="info-box">
+    <p> 본 연구는 온라인 환경에서 다양한 정보를 확인할 때의 어떠한 경험을 하는지 알아보기 위한 연구입니다. </p>
+    <p> 앞으로 여러분에게 용어-정의 쌍으로 이루어진 자료가 화면에 제시됩니다.</p>
+   <p><em>예) 교육 - 지식과 기술 따위를 가르치며 인격을 길러 줌</em></p>
+    <br>
+    <p>한 세트는 총 10개의 쌍으로 이루어져 있으며, 여러 세트를 학습하게 됩니다.</p>
+    <br>
+    <p>제시된 내용을 <strong> 최대한 이해하며 암기해 주세요.</strong></p>
+    <br>
+    <br>
+    <p>해당 내용에 대한 평가는 없으며, 자신의 경험에 집중하며 <strong>눈으로 보면서 조용히</strong> 학습해 주세요</p>
+    <br>
+    <p> 한 세트당 7분 간 학습하게 되며, 제한 시간이 끝나면 화면은 자동으로 넘어갑니다.</p>
+    <br>
+    <br>
+    <br>
+    <p>앞으로 화면에 나오는 안내에 따라 차근차근 진행해 주시면 됩니다.</p>
+    <p>실험이 종료된 후에는 실험자가 다시 오기까지 기다려 주세요 </p>
+    <br>
+    <br>
+    <p>실험 진행 시 핸드폰은 사용 금지이며, 뒤로가기 버튼은 누르시면 안됩니다. </p>
+  </div>
+
+  <p>준비가 되셨으면 아래 버튼을 눌러주세요.</p>
+  <button class="btn" onclick="startSet(1)">시작</button>
+</div>
+
+<!-- ==================== 세트 1~3 학습 (공용 템플릿) ==================== -->
+<div class="page" id="p_study">
+  <div class="study-container">
+<div style="display:flex;justify-content:center;align-items:center;position:relative;margin-bottom:20px;">
+  <div class="study-title" id="studyTitle" style="margin-bottom:0;"></div>
+  <div id="timerArea" style="position:absolute;right:0;text-align:center;font-size:13px;color:#999;">
+    <div>남은 시간</div>
+    <div id="timerDisplay" style="font-size:24px;font-weight:700;color:#2E75B6;">0:10</div>
+  </div>
+</div>
+<table class="study-table" id="studyTable"></table>
+<p style="font-size:13px;color:#999;">조용히 눈으로 확인하며 학습해 주세요.</p>
+</div>
+</div>
+
+<!-- ==================== 세트 간 전환 ==================== -->
+<div class="page" id="p_between">
+  <div style="text-align:center;padding:60px 0;">
+    <h2>수고하셨습니다</h2>
+    <p id="betweenMsg"></p>
+    <button class="btn" id="betweenBtn"></button>
+  </div>
+</div>
+
+<!-- ==================== 지루함 측정 ==================== -->
+<div class="page" id="p_boredom">
+  <h2>학습 경험</h2>
+  <div class="subtitle" style="color:#333;font-size:15px;">지금까지 학습을 하며 다음의 기분을 얼마나 느꼈는지 표시해 주세요.</div>
+ 
+  <div class="question">
+    <div class="question-text">1. 지루함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_boredom" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_boredom" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_boredom" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_boredom" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_boredom" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+
+  <div class="question">
+    <div class="question-text">2. 따분함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_dull" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_dull" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_dull" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_dull" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_dull" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">3. 안절부절못함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_restless" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_restless" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_restless" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_restless" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_restless" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">4. 피곤함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_tired" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_tired" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_tired" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_tired" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_tired" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">5. 짜증</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_irritated" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_irritated" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_irritated" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_irritated" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_irritated" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">6. 죄책감</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_guilt" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_guilt" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_guilt" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_guilt" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_guilt" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">7. 즐거움</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_enjoy" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_enjoy" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_enjoy" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_enjoy" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_enjoy" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">8. 희망</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_hope" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_hope" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_hope" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_hope" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_hope" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">9. 자부심</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_pride" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_pride" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_pride" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_pride" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_pride" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">10. 화</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_anger" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_anger" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_anger" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_anger" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_anger" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">11. 불안</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_anxiety" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_anxiety" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_anxiety" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_anxiety" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_anxiety" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">12. 수치심</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_shame" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_shame" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_shame" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_shame" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_shame" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">13. 절망감</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_hopeless" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_hopeless" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_hopeless" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_hopeless" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_hopeless" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+
+    <div class="question">
+    <div class="question-text">14. 안도감</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo_relief" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo_relief" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo_relief" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo_relief" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo_relief" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+
+  <button class="btn" onclick="saveBoredom()">다음</button>
+</div>
+
+<!-- ==================== 세트 3 후: 자기보고 설문 ==================== -->
+<div class="page" id="p_set3report">
+  <h2>학습 경험</h2>
+  <div class="subtitle" style="color:#333;font-size:15px;">방금까지 학습한 내용에 대해 응답해 주세요</div>
+ 
+
+  <div class="question">
+    <div class="question-text">방금 학습한 용어들을 얼마나 외웠다고 생각하나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="s3_memorize" value="1"><span>전혀<br>못 외움</span></label>
+      <label><input type="radio" name="s3_memorize" value="2"><span>조금<br>외움</span></label>
+      <label><input type="radio" name="s3_memorize" value="3"><span>보통</span></label>
+      <label><input type="radio" name="s3_memorize" value="4"><span>많이<br>외움</span></label>
+      <label><input type="radio" name="s3_memorize" value="5"><span>거의<br>다 외움</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">방금 학습한 용어들의 뜻을 얼마나 이해했다고 생각하나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="s3_understand" value="1"><span>전혀<br>이해 못함</span></label>
+      <label><input type="radio" name="s3_understand" value="2"><span>조금<br>이해함</span></label>
+      <label><input type="radio" name="s3_understand" value="3"><span>보통</span></label>
+      <label><input type="radio" name="s3_understand" value="4"><span>많이<br>이해함</span></label>
+      <label><input type="radio" name="s3_understand" value="5"><span>거의<br>다 이해함</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">방금 학습에 얼마나 집중했다고 생각하나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="s3_focus" value="1"><span>전혀<br>집중 못함</span></label>
+      <label><input type="radio" name="s3_focus" value="2"><span>조금<br>집중함</span></label>
+      <label><input type="radio" name="s3_focus" value="3"><span>보통</span></label>
+      <label><input type="radio" name="s3_focus" value="4"><span>많이<br>집중함</span></label>
+      <label><input type="radio" name="s3_focus" value="5"><span>매우<br>집중함</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="saveSet3Report()">제출</button>
+</div>
+
+<!-- ==================== 세트 4 지시문 ==================== -->
+<div class="page" id="p_set4intro">
+  <h2>다음 학습 안내</h2>
+  <div class="info-box" style="font-size:18px;">
+    <p>앞에서와 마찬가지로 10개의 용어-정의 쌍을 학습합니다.</p>
+    <p>이번에는 <strong>자유롭게 앞뒤로 넘기며</strong> 학습할 수 있습니다.</p>
+    <p>또한 <strong>원할 때까지 학습 후</strong> 자유롭게 학습 종료하시면 됩니다.</p>
+    <p>일정 시간이 지나면 <strong>'종료'</strong> 버튼이 활성화되며,<br>충분히 학습한 후 원할 때 종료하시면 됩니다.</p>
+  </div>
+ <div id="set4extra" style="display:none;background:#EEF4FB;border:2px solid #2E75B6;border-radius:8px;padding:16px 20px;margin:20px 0;color:#1B2A4A;font-weight:700;font-size:17px;line-height:1.7;">
+    본 실험부터는 두 참여자의 진행 상황이 함께 화면 상단에 표시됩니다.<br>
+    <span style="color:#2E75B6;font-weight:700;">나(A 참가자)</span>의 진행상황은 <span style="color:#2E75B6;">파란색</span>으로, <span style="color:#E8593C;font-weight:700;">상대방(B 참가자)</span>의 진행상황은 <span style="color:#E8593C;">빨간색</span>으로 표시됩니다.
+</div>
+  <button class="btn" onclick="startSet4()">시작</button>
+</div>
+
+<!-- ==================== 세트 4 학습 ==================== -->
+<div class="page" id="p_set4">
+<div id="progressArea" style="display:none;">
+<div style="background:#1B2A4A;padding:20px 28px;margin:0 -40px;display:flex;flex-direction:column;gap:12px;">
+<div style="text-align:center;font-size:16px;color:white;font-weight:700;margin-bottom:8px;">세트 4</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#85B7EB;font-weight:700;">A 참가자(나)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="myProg" style="width:10%;height:22px;background:#2E75B6;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="myProgText" style="width:40px;font-size:14px;color:#85B7EB;">1/10</div>
+</div>
+<div id="partnerGroup" style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#E8593C;font-weight:700;">B 참가자(상대방)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="partnerProg" style="width:10%;height:22px;background:#E8593C;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="partnerProgText" style="width:40px;font-size:14px;color:#E8593C;">1/10</div>
+</div>
+</div>
+</div>
+
+  <div class="set4-content">
+    <div class="study-title" id="s4title" style="margin-bottom:16px;">세트 4</div>
+    <div style="font-size:13px;color:#999;margin-bottom:16px;" id="s4counter">1 / 10</div>
+    <div class="term-card">
+      <div class="term-word" id="s4word"></div>
+      <div class="term-def" id="s4def"></div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-btn" id="s4prev" onclick="s4go(s4cur-1)">← 이전</button>
+      <div class="nav-dots" id="s4dots"></div>
+      <button class="nav-btn" id="s4next" onclick="s4go(s4cur+1)">다음 →</button>
+    </div>
+    <div class="finish-section">
+      <button class="btn" id="s4finish" disabled onclick="finishSet4()">학습 종료</button>
+      <div class="finish-hint" id="s4hint">버튼이 활성화되기 전까지 학습을 계속해주시기 바랍니다</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 세트 4 후: 자기보고 설문 ==================== -->
+<div class="page" id="p_set4report">
+  <h2>세트 4 학습 경험</h2>
+  <div class="subtitle" style="color:#333;font-size:16px;">방금 학습한 내용에 대해 응답해 주세요.</div>
+
+  <div class="question">
+    <div class="question-text"><u><strong>세트 4</strong></u>에서 학습한 용어들을 얼마나 외웠다고 생각하나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="s4_memorize" value="1"><span>전혀<br>못 외움</span></label>
+      <label><input type="radio" name="s4_memorize" value="2"><span>조금<br>외움</span></label>
+      <label><input type="radio" name="s4_memorize" value="3"><span>보통</span></label>
+      <label><input type="radio" name="s4_memorize" value="4"><span>많이<br>외움</span></label>
+      <label><input type="radio" name="s4_memorize" value="5"><span>거의<br>다 외움</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text"><u><strong>세트 4</strong></u>에서 학습한 용어들의 뜻을 얼마나 이해했다고 생각하나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="s4_understand" value="1"><span>전혀<br>이해 못함</span></label>
+      <label><input type="radio" name="s4_understand" value="2"><span>조금<br>이해함</span></label>
+      <label><input type="radio" name="s4_understand" value="3"><span>보통</span></label>
+      <label><input type="radio" name="s4_understand" value="4"><span>많이<br>이해함</span></label>
+      <label><input type="radio" name="s4_understand" value="5"><span>거의<br>다 이해함</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text"><u><strong>세트 4</strong></u> 학습에 얼마나 집중했다고 생각하나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="s4_focus" value="1"><span>전혀<br>집중 못함</span></label>
+      <label><input type="radio" name="s4_focus" value="2"><span>조금<br>집중함</span></label>
+      <label><input type="radio" name="s4_focus" value="3"><span>보통</span></label>
+      <label><input type="radio" name="s4_focus" value="4"><span>많이<br>집중함</span></label>
+      <label><input type="radio" name="s4_focus" value="5"><span>매우<br>집중함</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="saveSet4Report()">제출</button>
+</div>
+
+<!-- ==================== 세트 4 후: 부정 정서 측정 ==================== -->
+<div class="page" id="p_boredom2">
+  <h2>학습 경험</h2>
+  <div class="subtitle" style="color:#333;font-size:15px;"><u><strong>세트 4</strong></u>를 학습하며 다음의 기분을 얼마나 느꼈는지 표시해 주세요.</div>
+
+  <div class="question">
+    <div class="question-text">1. 지루함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_boredom" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_boredom" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_boredom" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_boredom" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_boredom" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">2. 따분함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_dull" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_dull" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_dull" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_dull" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_dull" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">3. 안절부절못함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_restless" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_restless" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_restless" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_restless" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_restless" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">4. 피곤함</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_tired" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_tired" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_tired" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_tired" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_tired" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">5. 짜증</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_irritated" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_irritated" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_irritated" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_irritated" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_irritated" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">6. 죄책감</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_guilt" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_guilt" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_guilt" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_guilt" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_guilt" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">7. 화</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_anger" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_anger" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_anger" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_anger" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_anger" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">8. 불안</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_anxiety" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_anxiety" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_anxiety" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_anxiety" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_anxiety" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">9. 수치심</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_shame" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_shame" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_shame" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_shame" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_shame" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">10. 절망감</div>
+    <div class="likert5">
+      <label><input type="radio" name="emo2_hopeless" value="1"><span>전혀<br>느끼지 않았다</span></label>
+      <label><input type="radio" name="emo2_hopeless" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
+      <label><input type="radio" name="emo2_hopeless" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="emo2_hopeless" value="4"><span>많이<br>느꼈다</span></label>
+      <label><input type="radio" name="emo2_hopeless" value="5"><span>매우 많이<br>느꼈다</span></label>
+    </div>
+  </div>
+
+  <button class="btn" onclick="saveBoredom2()">다음</button>
+</div>
+
+<!-- ==================== 세트 4 후: 상대방 대기 ==================== -->
+<div class="page" id="p_waitPartner">
+  <div style="text-align:center;padding:80px 20px;">
+    <h2 style="margin-bottom:30px;">수고하셨습니다</h2>
+    <div style="max-width:460px;margin:0 auto;">
+      <div style="background:#EEF4FB;border-radius:12px;padding:28px 32px;margin-bottom:30px;">
+        <p style="font-size:17px;color:#1B2A4A;line-height:1.8;margin:0;">상대방 참가자의 학습이 끝날 때까지<br><strong>잠시만 기다려주세요.</strong></p>
+      </div>
+      <div id="waitPartnerDots" style="font-size:32px;color:#2E75B6;letter-spacing:8px;margin-bottom:20px;">●○○</div>
+      <p id="waitPartnerMsg" style="font-size:14px;color:#888;">상대방이 학습 중입니다...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 세트 4 후: 분석 애니메이션 ==================== -->
+<div class="page" id="p_analyzing">
+  <div style="text-align:center;padding:80px 20px;">
+    <h2 id="analysisTitle" style="margin-bottom:40px;">두 참가자의 학습 패턴을 분석하고 있습니다</h2>
+    <div style="max-width:500px;margin:0 auto;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span id="analysisLabel" style="font-size:14px;color:#555;">페이지 체류 시간 분석 중...</span>
+        <span id="analysisPct" style="font-size:14px;color:#2E75B6;font-weight:600;">0%</span>
+      </div>
+      <div style="width:100%;height:12px;background:#e0e0e0;border-radius:6px;overflow:hidden;">
+        <div id="analysisBar" style="width:0%;height:100%;background:linear-gradient(90deg,#2E75B6,#4A9BE8);border-radius:6px;transition:width 0.3s;"></div>
+      </div>
+      <div id="analysisDetail" style="margin-top:20px;font-size:13px;color:#888;line-height:1.8;min-height:60px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 세트 4 후: 피드백 결과 ==================== -->
+<div class="page" id="p_feedback">
+  <div style="text-align:center;padding:60px 20px;">
+    <h2 id="feedbackTitle">학습 패턴 분석 완료</h2>
+    <div id="feedbackMsg" style="display:none;background:#EEF4FB;border:2px solid #2E75B6;border-radius:12px;padding:28px 32px;margin:40px auto;max-width:600px;font-size:18px;font-weight:600;line-height:1.8;color:#1B2A4A;text-align:center;">
+    </div>
+    <p id="feedbackNextMsg" style="margin-top:40px;color:#555;">다음 세트도 동일한 방식으로 학습해주세요.</p>
+    <button class="btn" id="feedbackNextBtn" style="display:none;" onclick="showPage('p_manipcheck')">다음</button>
+  </div>
+</div>
+
+<!-- ==================== 세트 4 피드백 후 조작 점검 ==================== -->
+<div class="page" id="p_manipcheck">
+  <h2>학습 경험 설문</h2>
+  <div class="subtitle" style="color:#333;font-size:18px;">세트 4에서의 학습 경험에 대해 응답해 주세요.</div>
+
+  
+  <div class="question">
+    <div class="question-text">세트 4에서 학습한 용어들이 나에게 유용하다고 느껴졌다</div>
+    <div class="likert5">
+      <label><input type="radio" name="mc_interest" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="mc_interest" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="mc_interest" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="mc_interest" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="mc_interest" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+
+    <div class="question">
+    <div class="question-text">세트 4에서 학습한 용어들을 다른 곳에서도 활용할 수 있을 것 같다</div>
+    <div class="likert5">
+      <label><input type="radio" name="mc_useful" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="mc_useful" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="mc_useful" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="mc_useful" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="mc_useful" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+
+  <div id="mcSocialDiv">
+    <div class="question">
+      <div class="question-text">세트 4를 학습하는 동안 옆의 참가자가 어떻게 하고 있는지 신경 쓰였다</div>
+      <div class="likert5">
+        <label><input type="radio" name="mc_social1" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="mc_social1" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="mc_social1" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="mc_social1" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="mc_social1" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">세트 4를 학습하는 것은 재미없고 따분했다</div>
+    <div class="likert5">
+      <label><input type="radio" name="mc_bored" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="mc_bored" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="mc_bored" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="mc_bored" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="mc_bored" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">세트 4를 학습하는 것은 지루했다</div>
+    <div class="likert5">
+      <label><input type="radio" name="mc_bored2" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="mc_bored2" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="mc_bored2" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="mc_bored2" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="mc_bored2" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+
+  <div id="mcCompDiv">
+    <div class="question">
+      <div class="question-text">세트 4를 학습하는 동안 옆의 참가자와 나를 비교하게 되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="mc_social2" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="mc_social2" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="mc_social2" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="mc_social2" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="mc_social2" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div id="mcEffortDiv">
+    <div class="question">
+      <div class="question-text">세트 4에서 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 열심히 한다</u>고 생각했나요?</div>
+      <div class="likert5">
+        <label><input type="radio" name="mc_effort" value="1"><span>1<br><small>훨씬 덜<br>열심히</small></span></label>
+        <label><input type="radio" name="mc_effort" value="2"><span>2</span></label>
+        <label><input type="radio" name="mc_effort" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="mc_effort" value="4"><span>4</span></label>
+        <label><input type="radio" name="mc_effort" value="5"><span>5<br><small>훨씬 더<br>열심히</small></span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">세트 4에서 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 잘 외운다</u>고 생각했나요?</div>
+      <div class="likert5">
+        <label><input type="radio" name="mc_perf" value="1"><span>1<br><small>훨씬<br>못함</small></span></label>
+        <label><input type="radio" name="mc_perf" value="2"><span>2</span></label>
+        <label><input type="radio" name="mc_perf" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="mc_perf" value="4"><span>4</span></label>
+        <label><input type="radio" name="mc_perf" value="5"><span>5<br><small>훨씬 더<br>잘함</small></span></label>
+      </div>
+    </div>
+    <button class="btn" onclick="saveManipCheck()">다음</button>
+  </div>
+</div>
+
+<!-- ==================== 세트 5 시작 대기 ==================== -->
+<!-- ==================== 세트 5 안내 ==================== -->
+<div class="page" id="p_set5intro">
+  <div style="text-align:center;padding:80px 20px;">
+    <h2 style="margin-bottom:30px;">다음 세트 안내</h2>
+    <p style="font-size:17px;color:#555;line-height:1.8;">다음 세트도 동일한 방식으로 학습해주세요.</p>
+    <button class="btn" style="margin-top:40px;" onclick="goToSet5()">시작</button>
+  </div>
+</div>
+
+<!-- ==================== 세트 5 시작 대기 ==================== -->
+<div class="page" id="p_waiting">
+  <div style="text-align:center;padding:80px 20px;">
+    <h2 style="margin-bottom:30px;">잠시만 기다려주세요</h2>
+    <div style="max-width:460px;margin:0 auto;">
+      <div style="background:#EEF4FB;border-radius:12px;padding:28px 32px;margin-bottom:30px;">
+        <p style="font-size:17px;color:#1B2A4A;line-height:1.8;margin:0;">상대방 참가자와 <strong>동시에 시작</strong>할 수 있도록<br>준비 중입니다.</p>
+      </div>
+      <div id="waitingDots" style="font-size:32px;color:#2E75B6;letter-spacing:8px;margin-bottom:20px;">●○○</div>
+      <p id="waitingMsg" style="font-size:14px;color:#888;">상대방의 준비를 기다리는 중...</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 세트 5 학습 ==================== -->
+<div class="page" id="p_set5">
+<div id="progressAreaS5" style="display:none;">
+<div style="background:#1B2A4A;padding:20px 28px;margin:0 -40px;display:flex;flex-direction:column;gap:12px;">
+<div style="text-align:center;font-size:16px;color:white;font-weight:700;margin-bottom:8px;">세트 5</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#85B7EB;font-weight:700;">A 참가자(나)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="myProgS5" style="width:10%;height:22px;background:#2E75B6;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="myProgTextS5" style="width:40px;font-size:14px;color:#85B7EB;">1/10</div>
+</div>
+<div id="partnerGroupS5" style="display:flex;flex-direction:row;align-items:center;gap:10px;">
+<div style="width:130px;font-size:14px;color:#E8593C;font-weight:700;">B 참가자(상대방)</div>
+<div style="flex-grow:1;height:22px;background:rgba(255,255,255,0.15);border-radius:4px;overflow:hidden;">
+<div id="partnerProgS5" style="width:10%;height:22px;background:#E8593C;border-radius:4px;transition:width 0.4s;"></div>
+</div>
+<div id="partnerProgTextS5" style="width:40px;font-size:14px;color:#E8593C;">1/10</div>
+</div>
+</div>
+</div>
+  <div class="set4-content">
+    <div class="study-title" id="s5title" style="margin-bottom:16px;">세트 5</div>
+    <div style="font-size:13px;color:#999;margin-bottom:16px;" id="s5counter">1 / 10</div>
+    <div class="term-card">
+      <div class="term-word" id="s5word"></div>
+      <div class="term-def" id="s5def"></div>
+    </div>
+    <div class="nav-section">
+      <button class="nav-btn" id="s5prev" onclick="s5go(s5cur-1)">← 이전</button>
+      <div class="nav-dots" id="s5dots"></div>
+      <button class="nav-btn" id="s5next" onclick="s5go(s5cur+1)">다음 →</button>
+    </div>
+    <div class="finish-section">
+      <button class="btn" id="s5finish" disabled onclick="finishSet5()">학습 종료</button>
+      <div class="finish-hint" id="s5hint">버튼이 활성화되기 전까지 학습을 계속해주시기 바랍니다</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 퀴즈 안내 ==================== -->
+<div class="page" id="p_quizintro">
+  <div style="text-align:center;padding:40px 0;">
+    <h2 style="margin-bottom:60px;">학습이 완료되었습니다</h2>
+    <p>학습 경험에 대한 설문 전에, 방금 학습한 내용에 대해 <strong>간단한 확인</strong>이 있습니다.</p>
+    <p> 빈칸에 알맞은 <strong>단어</strong>를 입력해 주세요.</p>
+    <button class="btn" onclick="showPage('p_quiz')">시작하기</button>
+  </div>
+</div>
+
+<div class="page" id="p_quiz">
+  <h2>학습 내용 확인</h2>
+  <div class="subtitle" style="color:#333;"> 빈칸에 알맞은 단어를 입력해 주세요.</div>
+  <div id="quizItems"></div>
+  <button class="btn" onclick="saveQuiz()">제출</button>
+</div>
+<!-- ==================== 사후 설문 페이지 1: 사회비교 활성화 + 공적 자기인식 ==================== -->
+<div class="page" id="p_post1">
+  <h2>학습 경험 설문</h2>
+  <div class="subtitle" style="color:#333;font-size:18px;">방금 전의 <u>마지막 학습(세트 5)</u>에서의 경험에 대해 응답해 주세요.</div>
+
+  <div id="postSocialDiv" style="display:none;">
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 옆의 참가자가 어떻게 하고 있는지 신경 쓰였다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social1" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social1" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social1" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social1" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social1" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 옆의 참가자와 나를 비교하게 되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social2" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social2" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social2" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social2" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social2" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 옆의 참가자가 나를 어떻게 생각할지를 신경썼다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social3" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social3" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social3" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social3" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social3" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 나는 내 모습이 옆의 참가자에게 어떻게 보일지 의식하고 있었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social4" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social4" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social4" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social4" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social4" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div id="postSocialControlDiv" style="display:none;">
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 이 실험의 다른 참여자들은 어떻게 하고 있는지 신경 쓰였다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social_c1" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social_c1" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social_c1" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social_c1" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social_c1" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 다른 사람과 나를 비교했다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social_c2" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social_c2" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social_c2" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social_c2" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social_c2" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 하는 동안 다른 사람이 나를 어떻게 생각할지 신경썼다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social_c3" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social_c3" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social_c3" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social_c3" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social_c3" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습하는 동안 나는 내 모습이 다른 사람들에게 어떻게 보일지 의식하고 있었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="social_c4" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="social_c4" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="social_c4" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="social_c4" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="social_c4" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+  </div>
+
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)에서 나는 충분히 노력했다고 생각한다</div>
+    <div class="likert5">
+      <label><input type="radio" name="self_effort" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="self_effort" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="self_effort" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="self_effort" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="self_effort" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)에서 나는 충분히 잘 외웠다고 생각한다</div>
+    <div class="likert5">
+      <label><input type="radio" name="self_perf" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="self_perf" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="self_perf" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="self_perf" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="self_perf" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="savePost1()">다음</button>
+</div><!-- ==================== 사후 설문 페이지 2: 사회비교 지각 (노력/수행) ==================== -->
+<div class="page" id="p_post2">
+  <h2>학습 경험 설문</h2>
+  <div class="subtitle" style="color:#333;font-size:18px;">방금 전의 <u>마지막 학습(세트 5)</u>에서의 경험에 대해 응답해 주세요.</div>
+
+  <div id="postCompDiv" style="display:none;">
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습할 때 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 열심히 한다</u>고 생각했나요?</div>
+      <div class="likert5">
+        <label><input type="radio" name="effort_comp" value="1"><span>1<br><small>훨씬 덜<br>열심히</small></span></label>
+        <label><input type="radio" name="effort_comp" value="2"><span>2</span></label>
+        <label><input type="radio" name="effort_comp" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="effort_comp" value="4"><span>4</span></label>
+        <label><input type="radio" name="effort_comp" value="5"><span>5<br><small>훨씬 더<br>열심히</small></span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">마지막 세트(세트5)를 학습할 때 옆의 참가자가 <strong>나에 비하여</strong> 과제를 얼마나 <u>더 잘 외운다</u>고 생각했나요?</div>
+      <div class="likert5">
+        <label><input type="radio" name="perf_comp" value="1"><span>1<br><small>훨씬<br>못함</small></span></label>
+        <label><input type="radio" name="perf_comp" value="2"><span>2</span></label>
+        <label><input type="radio" name="perf_comp" value="3"><span>3<br><small>비슷</small></span></label>
+        <label><input type="radio" name="perf_comp" value="4"><span>4</span></label>
+        <label><input type="radio" name="perf_comp" value="5"><span>5<br><small>훨씬 더<br>잘함</small></span></label>
+      </div>
+    </div>
+  </div>
+  <button class="btn" onclick="savePost2()">다음</button>
+</div>
+
+<!-- ==================== 사후 설문 페이지 3: 평가두려움 (BFNE-S) ==================== -->
+<div class="page" id="p_post3">
+  <h2>학습 경험 설문</h2>
+  <div class="subtitle" style="color:#333;">방금 전의 <u>마지막 학습(세트 5)</u>에서의 경험에 대해 응답해 주세요.</div>
+
+  <div id="postFneDiv" style="display:none;">
+    <div class="question">
+      <div class="question-text">옆의 참가자가 나를 어떻게 생각하는가가 중요하지 않다는 것을 알면서도 걱정되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne1" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne1" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne1" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne1" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne1" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">옆의 참가자가 나의 결점을 알아차릴까 봐 자주 걱정되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne2" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne2" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne2" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne2" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne2" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">옆의 참가자가 나를 인정해 주지 않을까봐 걱정되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne3" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne3" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne3" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne3" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne3" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">옆의 참가자가 나의 결점을 찾아낼까 봐 걱정되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne4" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne4" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne4" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne4" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne4" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">옆의 참가자가 나에 대해 어떤 생각을 하고 있을지 염려되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne5" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne5" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne5" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne5" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne5" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">내가 옆 사람에게 어떤 인상을 주는지에 대해 대개 걱정되었다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne6" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne6" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne6" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne6" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne6" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">옆의 참가자가 나를 어떻게 생각하는지에 대해 지나치게 염려했다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne7" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne7" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne7" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne7" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne7" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+    <div class="question">
+      <div class="question-text">옆의 참가자 앞에서 혹시 실수하거나 잘 못할까봐 걱정했다</div>
+      <div class="likert5">
+        <label><input type="radio" name="fne8" value="1"><span>전혀<br>그렇지 않다</span></label>
+        <label><input type="radio" name="fne8" value="2"><span>그렇지<br>않다</span></label>
+        <label><input type="radio" name="fne8" value="3"><span>보통이다</span></label>
+        <label><input type="radio" name="fne8" value="4"><span>그렇다</span></label>
+        <label><input type="radio" name="fne8" value="5"><span>매우<br>그렇다</span></label>
+      </div>
+    </div>
+  </div>
+  <button class="btn" onclick="savePost3()">다음</button>
+</div>
+
+<!-- ==================== 사후 설문 페이지 4: 과제가치 (MSLQ task value) ==================== -->
+<div class="page" id="p_post4">
+  <h2>학습 경험 설문</h2>
+  <div class="subtitle" style="color:#333;">방금 전의 <u>마지막 학습(세트 5)</u>에서의 경험에 대해 응답해 주세요.</div>
+
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)에서 배운 용어들을 다른 곳에서도 활용할 수 있을 것 같다</div>
+    <div class="likert5">
+      <label><input type="radio" name="value1" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="value1" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="value1" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="value1" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="value1" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)에서 배운 용어들은 나에게 유용하다고 생각한다</div>
+    <div class="likert5">
+      <label><input type="radio" name="value2" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="value2" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="value2" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="value2" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="value2" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)의 용어들을 배우는 것은 나에게 중요했다</div>
+    <div class="likert5">
+      <label><input type="radio" name="value3" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="value3" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="value3" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="value3" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="value3" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)의 용어들을 이해하는 것은 나에게 매우 중요했다</div>
+    <div class="likert5">
+      <label><input type="radio" name="value4" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="value4" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="value4" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="value4" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="value4" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)의 용어들을 배우는 것에 매우 흥미가 있었다</div>
+    <div class="likert5">
+      <label><input type="radio" name="value5" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="value5" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="value5" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="value5" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="value5" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트(세트5)의 용어들의 주제에 관심이 간다</div>
+    <div class="likert5">
+      <label><input type="radio" name="value6" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="value6" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="value6" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="value6" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="value6" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="savePost4()">다음</button>
+</div>
+
+<!-- ==================== 사후 설문 페이지 5: 내재동기 + 사전지식 ==================== -->
+<div class="page" id="p_post5">
+  <h2>학습 경험 설문</h2>
+  <div class="subtitle" style="color:#333;">방금 전의 <u>마지막 학습(세트 5)</u>에서의 경험에 대해 응답해 주세요.</div>
+
+  <div class="question">
+    <div class="question-text">오늘 학습한 단어에 대해서 더 알고 싶다</div>
+    <div class="likert5">
+      <label><input type="radio" name="reeng1" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="reeng1" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="reeng1" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="reeng1" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="reeng1" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">오늘 학습한 단어에 대해서 더 찾아볼 의향이 있다</div>
+    <div class="likert5">
+      <label><input type="radio" name="reeng2" value="1"><span>전혀<br>그렇지 않다</span></label>
+      <label><input type="radio" name="reeng2" value="2"><span>그렇지<br>않다</span></label>
+      <label><input type="radio" name="reeng2" value="3"><span>보통이다</span></label>
+      <label><input type="radio" name="reeng2" value="4"><span>그렇다</span></label>
+      <label><input type="radio" name="reeng2" value="5"><span>매우<br>그렇다</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">마지막 세트의 내용 중 원래 알고 있는 내용이 있었나요?</div>
+    <div class="likert5">
+      <label><input type="radio" name="prior_k" value="1"><span>전혀<br>몰랐다</span></label>
+      <label><input type="radio" name="prior_k" value="2"><span>잘<br>몰랐다</span></label>
+      <label><input type="radio" name="prior_k" value="3"><span>보통</span></label>
+      <label><input type="radio" name="prior_k" value="4"><span>알고<br>있었다</span></label>
+      <label><input type="radio" name="prior_k" value="5"><span>매우<br>잘 알았다</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="savePost()">제출</button>
+</div>
+
+<!-- ==================== 추가 연구 참여 의향 ==================== -->
+<div class="page" id="p_followup">
+  <h2>추가 학습 안내</h2>
+  <div class="info-box">
+    <p>오늘 학습한 용어들에 대해 <strong>더 자세히 정리된 심화 학습 자료</strong>가 준비되어 있습니다.</p>
+    <p>심화 학습은 약 <strong>10분</strong> 정도 소요됩니다.</p>
+    <p>관심이 있으신 분만 자유롭게 참여하시면 됩니다.</p>
+    <p>원하지 않으시면 '아니오'를 선택해 주세요.</p>
+</div>
+  <div class="question">
+    <div class="question-text">추가 학습 자료를 학습하시겠습니까?</div>
+    <div class="likert5" style="justify-content:center;gap:20px;">
+      <label style="flex:none;width:120px;"><input type="radio" name="extra_study" value="yes"><span>예</span></label>
+      <label style="flex:none;width:120px;"><input type="radio" name="extra_study" value="no"><span>아니오</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="saveFollowup()">제출</button>
+</div>
+
+
+<!-- ==================== 핸드폰 뒷 4자리 확인 ==================== -->
+<div class="page" id="p_phone_confirm">
+  <h2>마지막 확인</h2>
+  <div class="subtitle">데이터 연결을 위해 핸드폰 번호 뒷 4자리를 다시 한 번 입력해 주세요.</div>
+  <div class="question">
+    <div class="question-text">핸드폰 번호 뒷 4자리</div>
+    <input type="text" class="text-input" id="inp_phone_confirm" placeholder="예: 1234" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+  </div>
+  <button class="btn" onclick="savePhoneConfirm()">제출</button>
+</div>
+
+
+<!-- ==================== 완료 + 데이터 저장 ==================== -->
+<div class="page" id="p_end">
+  <div style="text-align:center;">
+    <h2>연구 참여가 완료되었습니다</h2>
+    <p>수고하셨습니다.</p>
+    <p>잠시 앉아서 대기해 주세요</p>
+  </div>
+</div>
+
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ================================================================ -->
+<script>
+// ========== 데이터 ==========
+var data = {};
+
+// ========== 타임스탬프 초기화 ==========
+data.phase = 'experiment';
+
+
+var condition = 'performance'; // 'control'(혼자), 'effort'(노력비교), 'performance'(수행비교) — 실험 시작 전 설정
+
+// ========== 용어-정의 쌍 ==========
+var sets = {
+  1: { title: '세트 1', pairs: [
+    ['끝동부리','베어 낸 통나무의 위쪽 끄트머리 부분'],
+    ['감람석','마그네슘, 철 따위를 함유한 규산염 광물. 사방 정계에 속하며, 감람녹색·흰색·회색 따위를 띤다. 빛깔이 곱고 맑은 것은 보석으로 쓴다'],
+    ['트래버스','지질학적 지역의 한쪽에서 반대쪽으로 조사 또는 시료(試料)를 채취하여 가는 선(線)'],
+    ['춘재',' 봄에서 여름에 걸쳐 형성되는 목질의 부분. 나이테의 안쪽을 차지하며 추재에 비하여 세포가 크고 세포벽도 얇다'],
+    ['단사 정계','광물 결정 모양의 하나. 결정의 세 축 가운데 둘은 경사지게 만나고, 다른 하나는 그것들과 직각으로 만나되, 세 축의 길이가 각각 다르다. 휘석, 정장석, 석고 따위에서 볼 수 있다'],
+    ['어닐링','금속이나 유리를 일정한 온도로 가열한 다음에 천천히 식혀 내부 조직을 고르게 하고 응력을 제거하는 열처리 조작'],
+    ['액성한계','퇴적물에서 반고체와 반유동체의 중간 상태에서 수분을 머금는 경계'],
+    ['종단구배','도로, 철도, 둑 따위의 구조물이 세로 방향으로 기울어진 정도'],
+    ['취성재료','힘을 받을 때 큰 소성 변형이 없이 부스러지면서 파괴되는 재료'],
+    ['윤벌기','벌채에서, 한 번 벌채한 구역을 다시 벌채하게 될 때까지 걸리는 기간']
+  ]},
+  2: { title: '세트 2', pairs: [
+    ['변재','통나무의 겉 부분. 빛은 희고 몸은 무르며 질이 거칠어, 그릇이나 건축재로는 적당하지 않다'],
+    ['가소제','합성수지나 합성 고무 따위의 고체에 첨가하여 가공성을 향상시키거나 유연성을 높이기 위하여 쓰는 물질'],
+    ['수준측량','지구상의 각 지점 간의 높낮이를 재는 일. 대개 수준의를 써서 상대적 높이를 재거나, 평균 해면으로 높이를 잰다'],
+    ['태반','미세한 광물이나 진흙에 섞인 광석을 물과 함께 경사진 곳을 흐르게 하여 선별하는 기계'],
+    ['결정립','금속 재료 따위에서, 현미경적인 크기의 불규칙한 형상의 집합으로 되어 있는 결정 입자'],
+    ['양생','콘크리트가 완전히 굳을 때까지 적당한 수분을 유지하고 충격을 받거나 얼지 아니하도록 보호하는 일.'],
+    ['심재','나무줄기의 중심부에 있는 단단한 부분. 또는 그것으로 된 재목. 보통 붉은색, 누런색, 흑갈색이다'],
+    ['반상조직','큰 결정이 작은 알갱이 모양 결정의 집합 속 또는 유리 속에 흩어져 있는 암석 조직'],
+    ['시거측량','경위의 따위에서 망원경 안의 두 평행선 사이에 있는 표척의 길이로 거리를 구하는 방법'],
+    ['소성가공','물체의 가소성을 이용하여 금속이나 플라스틱 재료 따위를 변형시켜 필요한 모양을 만드는 가공']
+  ]},
+  3: { title: '세트 3', pairs: [
+    ['다형변정','광물질이 같은 화학 조성을 가지면서, 큰 압력이나 마그마의 접촉을 받아 다른 모양의 결정형을 이루는 것'],
+    ['삼각측량','삼각형의 한 변의 길이와 두 개의 끼인각을 알면 그 삼각형의 나머지 두 변의 길이를 알 수 있다는 원리를 이용하여 지형을 측량하는 방법. 정밀하게 길이를 잰 기선(基線)과 그 밖에 몇 개의 기준점을 설정하고 그것들을 이어 많은 삼각형의 그물을 만든 후, 삼각법에 의하여 계산한다'],
+    ['공정반응','가열에 의해 두 가지 이상의 고체상에서 단일 액체상이 생성되는 등온 가역 반응'],
+    ['개벌','일정한 부분의 산림을 일시에 또는 단기간에 모두 베어 냄'],
+    ['침탄','저탄소강 표면부를 단단하게 하기 위하여 탄소 성분을 스며들게 하는 처리. 목탄, 일산화 탄소, 사이안화 칼륨 따위에 강철을 넣고 가열한다'],
+    ['편심하중','구조의 단면 중심 이외의 점에 걸리는 하중'],
+    ['날화','점도가 큰 물질이나 반고체(半固體) 재료를 이기고 반죽하는 일'],
+    ['벽개','광물이 일정한 방향으로만 틈이 생기고 평탄한 면을 보이며 쪼개지는 일'],
+    ['간벌','나무들이 적당한 간격을 유지하여 잘 자라도록 불필요한 나무를 솎아 베어 냄'],
+    ['갱판','광산에서, 물을 빼기 위하여 파 놓은 물길']
+  ]},
+  4: { title: '세트 4', pairs: [
+    ['아콰마린','짙은 푸른색을 띠는 녹주석. 아름다운 것은 갈아서 장식품으로 쓴다'],
+    ['피로갈롤적','금속 적정 지시약의 하나. 붉은색 고체로, 비스무트, 납, 코발트, 니켈 및 희토류 원소들과 특수한 색을 띠는 착화합물을 만든다'],
+    ['임분','삼림 안에 있는 나무의 종류, 나이, 생육 상태 따위가 비슷하여 주위의 다른 삼림과 구분되는 숲의 범위'],
+    ['규구법','입체로 된 물건을 필요한 형체로 만드는 법'],
+    ['미네랄로지','광물의 물리적·화학적 성질과 종류, 광물이 이루어지는 원인, 산출되는 상태, 쓰임새 따위를 연구하는 학문'],
+    ['백육재','통나무의 껍질 가까이에 위치한 희고 무른 부분을 켜 낸 재목. 수액이 많아 무르고 썩거나 변형되기 쉽다'],
+    ['취성파괴','어떤 재료가 소성 변형을 거의 하지 아니한 채 일으키는 파괴. 유리가 깨지는 것처럼 단번에 일어나는 파괴를 이른다'],
+    ['트로멜','광물의 알갱이를 골라내는 기계의 하나. 철사로 된 망을 붙인 원통이 경사진 축 주위로 회전한다'],
+    ['누비줄','목재 따위의 겉면에 누빈 것처럼 오목오목 들어간 여러 개의 골'],
+    ['다포초자','유리 가루에 거품제를 넣고 높은 열을 가하여 거품이 안에 빽빽이 생기도록 한 유리. 단열재로 쓴다']
+  ]},
+  5: { title: '세트 5', pairs: [
+    ['엽리','널빤지 모양의 광물이 나란하게 배열되어 나타나는 구조. 변성암에 잘 나타난다'],
+    ['연륜분석','나무의 나이테를 분석하여 과거의 기후를 추정하는 고기후학(古氣候學)의 한 방법. 나이테의 폭은 토양, 나무의 나이 등 기후 이외의 인자에도 영향을 받기 때문에 분석에 신중을 기하여야 한다'],
+    ['전단대','전단 응력 때문에 암석이 부스러지면서 형성된 작은 틈들이 나란하게 배열되어 있는 구간'],
+    ['전리용압','금속을 그 금속염 수용액에 담글 때, 금속이 이온으로 되어 녹아 나오려고 하는 경향. 철·아연 따위는 강하며, 금·백금 따위는 약하다'],
+    ['추재','늦여름부터 늦가을 동안에 형성되는 목질의 부분. 나이테의 둘레 부분으로 재목의 질이 치밀하다'],
+    ['맹수갱','출구가 땅 밖으로 직접 나지 않고 수평 갱도로 나 있는 수직 갱도'],
+    ['소성한계','가소성 물질이 물러서 임의의 모양으로 바꿀 수 있는 상태로부터 고체로 넘어가는 무르기의 한계'],
+    ['맹아림','나무를 벤 뒤에 남은 그루터기에서 난 싹을 기른 수풀'],
+    ['조흔색','자기를 광물로 긁거나 갈았을 때 생기는 줄 자국의 고유한 빛깔'],
+    ['편석','금속이나 합금이 응고할 때 화학적 조성이 고르지 않게 되는 현상']
+  ]}
+};
+
+// 상대방 프로그레스 바 패턴 [초, 쌍번호(0-9)]
+var partnerPattern = [
+  [0,0],[5,0],[6,1],[8,1],[9,2],[10,2],[11,3],[12,3],[13,4],[14,4],
+  [15,3],[17,3],[18,2],[20,2],[21,1],[35,1],[36,2],[47,2],[48,3],[59,3],
+  [60,4],[75,4],[76,5],[90,5],[91,6],[120,6],[121,7],[132,7],[133,8],[139,8],
+  [140,9],[155,9],[156,8],[170,8],[171,9],[190,9],[191,8],[200,8],[201,7],[221,7],
+  [222,6],[232,6],[233,5],[250,5],[251,4],[264,4],[265,3],[280,3],[281,2],[300,2],
+  [301,1],[330,1],[331,2],[350,2],[351,3]
+];
+
+// ========== 설문 문항 데이터 ==========
+var bpsItems = [
+  ['bps1','나는 활동에 집중하기 쉽다'],
+  ['bps2','나는 나 스스로를 즐겁게 하는 것이 쉽다고 생각한다'],
+  ['bps3','나는 하는 일에서 대부분 즐거움을 얻는다'],
+  ['bps4','나는 어떤 상황에서도 흥미를 끌 수 있는 것을 찾을 수 있다'],
+  ['bps5','많은 사람들이 나를 창의적이거나 상상력이 풍부하다고 말한다'],
+  ['bps6','나는 친구들 중에서 가장 오래 지속적으로 무언가를 하는 사람이다'],
+  ['bps7','나는 다른 사람의 홈 비디오나 여행 슬라이드를 보는 것이 지루하다'],
+  ['bps8','내가 해야 하는 일들 중 많은 것들이 반복적이고 단조롭다'],
+  ['bps9','나는 내게 정말로 재미있는 일을 찾는 것이 매우 어렵다'],
+  ['bps10','나는 위험을 감수하고서라도 재미있는 일을 해야 살아있다는 느낌이 든다'],
+  ['bps11','TV나 영화에는 항상 똑같은 것들이 나오는 것 같아 진부한 느낌이 든다'],
+  ['bps12','내가 어렸을 때 나의 일상은 단조롭고 따분한 편이었다']
+];
+
+var incomItems = [
+  ['sco1','나는 종종 사랑하는 이들(애인, 가족 등)의 행동과 타인의 행동을 비교한다'],
+  ['sco2','나는 항상 나의 행동을 타인의 행동과 비교하는 것을 좋아한다'],
+  ['sco3','내가 일을 잘했는지 알고자 할 때, 다른 사람이 한 것과 내가 한 것을 비교한다'],
+  ['sco4','나는 내가 사회성 있게 행동(예, 대인관계, 인기도)하고 있는지 타인과 비교하곤 한다'],
+  ['sco5','나는 다른 사람과 나의 행동을 비교해보는 타입이 아니다'],
+  ['sco6','나는 종종 내가 인생에서 달성한 것과 다른 사람들이 달성한 것을 비교한다'],
+  ['sco7','나는 종종 다양한 의견과 경험을 얻기 위해 타인과 이야기하길 좋아한다'],
+  ['sco8','나는 종종 누군가 나와 비슷한 문제에 직면해 있을 때, 그 사람들이 무슨 생각을 하고 있는지 알고 싶어지곤 한다'],
+  ['sco9','나는 항상 나와 상황(입장)이 비슷한 사람들이라면 어떻게 행동을 했을지 알고 싶다'],
+  ['sco10','무언가를 배우려고 할 때, 이에 대한 타인의 생각을 알려고 한다'],
+  ['sco11','나는 절대 나의 상황을 남들과 비교해서 생각하지 않는다']
+];
+
+var agqItems = [
+  ['map1','나의 목표는 수업에서 배우는 내용을 완벽히 이해하는 것이다'],
+  ['map2','나는 수업에서 배우는 내용을 최대한 완전히 이해하고자 노력한다'],
+  ['map3','나의 목표는 가능한 많이 배우는 것이다'],
+  ['mav1','나는 내가 할 수 있는 것보다 덜 배우는 것을 지양한다'],
+  ['mav2','나는 수업 내용을 완전히 이해하지 못하는 것을 지양하기 위해 노력한다'],
+  ['mav3','나는 배울 수 있는 것보다 덜 배우는 것을 지양한다'],
+  ['pap1','나의 목표는 다른 학생들보다 잘하는 것이다'],
+  ['pap2','나는 다른 친구들보다 좋은 성적을 받기 위해 노력한다'],
+  ['pap3','나의 목표는 다른 친구들보다 높은 점수를 받는 것이다'],
+  ['pav1','나의 목표는 다른 학생들보다 못하는 것을 피하는 것이다'],
+  ['pav2','나는 다른 친구들보다 나쁜 성적을 받지 않기 위해 노력한다'],
+  ['pav3','나의 목표는 다른 친구들보다 낮은 점수를 받지 않는 것이다']
+];
+
+// ========== 유틸리티 ==========
+function showPage(id) {
+  var pp = document.querySelectorAll('.page');
+  for (var i=0;i<pp.length;i++) pp[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function getR(name) {
+  var el = document.querySelector('input[name="'+name+'"]:checked');
+  return el ? el.value : null;
+}
+
+function checkRs(names) {
+  for (var i=0;i<names.length;i++) { if (!getR(names[i])) return false; }
+  return true;
+}
+
+function saveRs(names) {
+  for (var i=0;i<names.length;i++) data[names[i]] = getR(names[i]);
+}
+
+function saveRadioPage(names, nextPage) {
+  if (!checkRs(names)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(names);
+  showPage(nextPage);
+}
+
+// 리커트 5점 문항 HTML 생성
+function makeLikert5(name, text, num) {
+  var labels = ['전혀<br>그렇지 않다','그렇지<br>않다','보통이다','그렇다','매우<br>그렇다'];
+  var html = '<div class="question"><div class="question-text">'+num+'. '+text+'</div><div class="likert5">';
+  for (var i=1;i<=5;i++) {
+    html += '<label><input type="radio" name="'+name+'" value="'+i+'"><span>'+labels[i-1]+'</span></label>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+
+
+
+
+
+// ========== 세트 1~3 학습 ==========
+var currentSet = 0;
+var timerInterval = null;
+
+function startSet(setNum) {
+  currentSet = setNum;
+  var s = sets[setNum];
+  document.getElementById('studyTitle').textContent = s.title;
+  var tbl = '<tr><th style="width:40px">#</th><th style="width:100px">용어</th><th>정의</th></tr>';
+  for (var i=0;i<s.pairs.length;i++) {
+    tbl += '<tr><td>'+(i+1)+'</td><td class="term">'+s.pairs[i][0]+'</td><td>'+s.pairs[i][1]+'</td></tr>';
+  }
+  document.getElementById('studyTable').innerHTML = tbl;
+  showPage('p_study');
+
+ // 타이머 (테스트: 10초)
+  var remaining = 420;
+  document.getElementById('timerDisplay').textContent = '0:' + String(remaining).padStart(2, '0');
+
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(function() {
+    remaining--;
+    var min = Math.floor(remaining / 60);
+    var sec = remaining % 60;
+    document.getElementById('timerDisplay').textContent = min + ':' + String(sec).padStart(2, '0');
+    if (remaining <= 5) {
+      document.getElementById('timerDisplay').style.color = '#E8593C';
+    }
+    if (remaining <= 0) {
+      clearInterval(timerInterval);
+      document.getElementById('timerDisplay').style.color = '#2E75B6';
+      showBetween(setNum);
+    }
+  }, 1000);
+}
+
+function showBetween(setNum) {
+  document.getElementById('betweenMsg').textContent = '수고하셨습니다.';
+  if (setNum < 3) {
+    document.getElementById('betweenBtn').textContent = '다음 세트 시작';
+    document.getElementById('betweenBtn').onclick = function() { startSet(setNum+1); };
+  } else {
+    document.getElementById('betweenBtn').textContent = '다음';
+    document.getElementById('betweenBtn').onclick = function() { showPage('p_boredom'); };
+  }
+  showPage('p_between');
+}
+
+
+// ========== 지루함 ==========
+function saveBoredom() {
+  var emoItems = ['emo_enjoy','emo_hope','emo_pride','emo_anger','emo_anxiety','emo_shame','emo_hopeless','emo_boredom','emo_dull','emo_restless','emo_tired','emo_irritated','emo_guilt','emo_relief'];
+  if (!checkRs(emoItems)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(emoItems);
+  if (condition !== 'control') {
+    document.getElementById('set4extra').style.display = 'block';
+  }
+  showPage('p_set3report');
+}
+
+// ========== 세트별 학습 경험 저장 ==========
+
+function saveSet3Report() {
+  var items = ['s3_memorize','s3_understand','s3_focus'];
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+  showPage('p_set4intro');
+}
+
+// ========== 세트 4 ==========
+var s4cur = 0;
+var s4visited = {};
+var s4start = 0;
+var s4finishEnabled = false;
+var s4interval = null;
+
+function startSet4() {
+  s4cur = 0;
+  s4visited = {0:true};
+  s4start = Date.now();
+  s4finishEnabled = false;
+  document.getElementById('s4finish').disabled = true;
+  document.getElementById('s4hint').textContent = '일정한 학습 시간이 지나면 버튼이 활성화됩니다';
+
+  if (condition !== 'control') {
+    document.getElementById('progressArea').style.display = 'block';
+    document.getElementById('partnerGroup').style.display = 'flex';
+    document.getElementById('s4title').style.display = 'none';
+  } else {
+    document.getElementById('progressArea').style.display = 'block';
+    document.getElementById('partnerGroup').style.display = 'none';
+    document.getElementById('s4title').style.display = 'block';
+  }
+
+  // dots 생성
+  var dotsDiv = document.getElementById('s4dots');
+  dotsDiv.innerHTML = '';
+  for (var i=0;i<10;i++) {
+    var d = document.createElement('div');
+    d.className = 'nav-dot' + (i===0?' active':'');
+    (function(idx){ d.onclick = function(){ s4go(idx); }; })(i);
+    dotsDiv.appendChild(d);
+  }
+
+  s4update();
+  showPage('p_set4');
+
+  if (s4interval) clearInterval(s4interval);
+  s4interval = setInterval(function() {
+    if (condition !== 'control') updatePartner();
+    checkS4Finish();
+  }, 200);
+}
+
+function s4go(idx) {
+  if (idx<0||idx>=10) return;
+  s4cur = idx;
+  s4visited[idx] = true;
+  s4update();
+}
+
+function s4update() {
+  var p = sets[4].pairs[s4cur];
+  document.getElementById('s4word').textContent = p[0];
+  document.getElementById('s4def').textContent = p[1];
+  document.getElementById('s4counter').textContent = (s4cur+1)+' / 10';
+  document.getElementById('s4prev').disabled = (s4cur===0);
+  document.getElementById('s4next').disabled = (s4cur===9);
+
+  // 나의 프로그레스
+  var pct = ((s4cur+1)/10)*100;
+  document.getElementById('myProg').style.width = pct+'%';
+  document.getElementById('myProgText').textContent = (s4cur+1)+' / 10';
+
+  // dots
+  var dots = document.querySelectorAll('#s4dots .nav-dot');
+  for (var i=0;i<dots.length;i++) {
+    dots[i].className = 'nav-dot';
+    if (i===s4cur) dots[i].className = 'nav-dot active';
+    else if (s4visited[i]) dots[i].className = 'nav-dot visited';
+  }
+}
+
+function updatePartner() {
+  var elapsed = (Date.now()-s4start)/1000;
+  var pp = 0;
+  for (var i=partnerPattern.length-1;i>=0;i--) {
+    if (elapsed>=partnerPattern[i][0]) { pp=partnerPattern[i][1]; break; }
+  }
+  var pct = ((pp+1)/10)*100;
+  document.getElementById('partnerProg').style.width = pct+'%';
+  document.getElementById('partnerProgText').textContent = (pp+1)+' / 10';
+}
+
+function checkS4Finish() {
+  var elapsed = (Date.now()-s4start)/1000;
+  // ★ 테스트시 60을 10으로 변경
+  if (elapsed>=30 && !s4finishEnabled) {
+    s4finishEnabled = true;
+    document.getElementById('s4finish').disabled = false;
+    document.getElementById('s4hint').textContent = '학습이 모두 완료되었다면 종료해 주세요';
+  }
+}
+
+function finishSet4() {
+  clearInterval(s4interval);
+  var totalSec = Math.round((Date.now()-s4start)/1000);
+  data.set4_duration = totalSec;
+  data.set4_visited = Object.keys(s4visited).sort().join(',');
+  showPage('p_set4report');
+}
+
+function saveSet4Report() {
+  var items = ['s4_memorize','s4_understand','s4_focus'];
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+
+  if (condition === 'control') {
+    startAnalysisControl();
+  } else {
+    showPage('p_waitPartner');
+    var dotFrames = ['●○○','○●○','○○●','○●○'];
+    var dotIdx = 0;
+    var wpDots = setInterval(function() {
+      dotIdx = (dotIdx + 1) % dotFrames.length;
+      document.getElementById('waitPartnerDots').textContent = dotFrames[dotIdx];
+    }, 500);
+
+    var wpMessages = [
+      '잠시만 기다려 주세요...',
+      '잠시만 기다려 주세요...',
+      '잠시만 기다려 주세요...'
+    ];
+    var wpMsgIdx = 0;
+    var wpMsgInterval = setInterval(function() {
+      if (wpMsgIdx < wpMessages.length - 1) {
+        wpMsgIdx++;
+        document.getElementById('waitPartnerMsg').textContent = wpMessages[wpMsgIdx];
+      }
+    }, 5000);
+
+    setTimeout(function() {
+      clearInterval(wpDots);
+      clearInterval(wpMsgInterval);
+      startAnalysis();
+    }, 15000);
+  }
+}
+
+function saveBoredom2() {
+  var items = ['emo2_boredom','emo2_dull','emo2_restless','emo2_tired',
+               'emo2_irritated','emo2_guilt','emo2_anger','emo2_anxiety',
+               'emo2_shame','emo2_hopeless'];
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+
+  if (condition === 'control') {
+    // 통제 조건: 본인 응답 패턴만 분석하는 애니메이션
+    startAnalysisControl();
+    return;
+  }
+
+  // 1단계: 상대방 대기 화면
+  showPage('p_waitPartner');
+  var dotFrames = ['●○○','○●○','○○●','○●○'];
+  var dotIdx = 0;
+  var wpDots = setInterval(function() {
+    dotIdx = (dotIdx + 1) % dotFrames.length;
+    document.getElementById('waitPartnerDots').textContent = dotFrames[dotIdx];
+  }, 500);
+
+  var wpMessages = [
+    '잠시만 기다려 주세요...',
+    '상대방을 기다리고 있습니다...',
+    '잠시만 기다려 주세요...'
+  ];
+  var wpMsgIdx = 0;
+  var wpMsgInterval = setInterval(function() {
+    if (wpMsgIdx < wpMessages.length - 1) {
+      wpMsgIdx++;
+      document.getElementById('waitPartnerMsg').textContent = wpMessages[wpMsgIdx];
+    }
+  }, 5000);
+
+  // 15초 후 분석 시작
+  setTimeout(function() {
+    clearInterval(wpDots);
+    clearInterval(wpMsgInterval);
+    startAnalysis();
+  }, 15000);
+}
+
+function startAnalysis() {
+  showPage('p_analyzing');
+  document.getElementById('analysisTitle').textContent = '두 참가자가 지금까지 진행한 모든 세트의 학습 데이터를 비교 분석하고 있습니다';
+ var steps = [
+    { pct: 15, label: '참가자 A 학습 로그 불러오는 중...', detail: '', delay: 5000 },
+    { pct: 30, label: '참가자 B 학습 로그 불러오는 중...', detail: '', delay: 4000 },
+    { pct: 50, label: '세트 1, 세트 2, 세트 3, 세트 4 체류 시간 표준화 점수 산출 중...', detail: '페이지 이동 패턴, 체류 시간, 이해도 응답을 종합하고 있습니다.', delay: 7000 },
+    { pct: 70, label: '두 참가자의 학습 응답 가중 평균 계산 중...', detail: '종합 데이터를 바탕으로 두 참가자를 비교하고 있습니다.', delay: 5000 },
+    { pct: 90, label: '최종 결과 산출 중...', detail: '분석 결과를 정리하고 있습니다.', delay: 2000 },
+    { pct: 100, label: '분석 완료', detail: '', delay: 500 }
+];
+  var stepIdx = 0;
+
+  function nextStep() {
+    if (stepIdx >= steps.length) {
+      setTimeout(function() { showFeedbackResult(); }, 500);
+      return;
+    }
+    var s = steps[stepIdx];
+    document.getElementById('analysisBar').style.width = s.pct + '%';
+    document.getElementById('analysisPct').textContent = s.pct + '%';
+    document.getElementById('analysisLabel').textContent = s.label;
+    document.getElementById('analysisDetail').textContent = s.detail;
+    stepIdx++;
+    setTimeout(nextStep, s.delay);
+  }
+  nextStep();
+}
+
+function startAnalysisControl() {
+  showPage('p_analyzing');
+  document.getElementById('analysisTitle').textContent = '학습 패턴을 분석하고 있습니다';
+  var steps = [
+    { pct: 20, label: '응답 불러오는 중...', detail: '', delay: 3000 },
+    { pct: 45, label: '학습 경험 응답 분석 중...', detail: '자기 보고 응답을 분석하고 있습니다.', delay: 4000 },
+    { pct: 70, label: '학습 패턴 데이터 분석 중...', detail: '페이지 체류 시간 및 이동 패턴을 분석하고 있습니다.', delay: 5000 },
+    { pct: 90, label: '최종 결과 산출 중...', detail: '분석 결과를 정리하고 있습니다.', delay: 2000 },
+    { pct: 100, label: '분석 완료', detail: '', delay: 500 }
+  ];
+  var stepIdx = 0;
+
+  function nextStep() {
+    if (stepIdx >= steps.length) {
+      setTimeout(function() {
+        showPage('p_feedback');
+        document.getElementById('feedbackNextMsg').textContent = '다음 세트도 동일한 방식으로 학습해주세요.';
+        document.getElementById('feedbackNextBtn').style.display = 'inline-block';
+        document.getElementById('feedbackNextBtn').onclick = function() { showPage('p_manipcheck'); };
+      }, 500);
+      return;
+    }
+    var s = steps[stepIdx];
+    document.getElementById('analysisBar').style.width = s.pct + '%';
+    document.getElementById('analysisPct').textContent = s.pct + '%';
+    document.getElementById('analysisLabel').textContent = s.label;
+    document.getElementById('analysisDetail').textContent = s.detail;
+    stepIdx++;
+    setTimeout(nextStep, s.delay);
+  }
+  nextStep();
+}
+function showFeedbackResult() {
+  var fbDiv = document.getElementById('feedbackMsg');
+  if (condition === 'effort') {
+    fbDiv.innerHTML = '<p style="font-size:15px;color:#555;margin-bottom:20px;">화면 이동 패턴 및 체류시간을 분석한 결과</p>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="width:80px;text-align:right;font-size:14px;color:#2E75B6;font-weight:700;">A 참가자<br>(나)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:43%;height:100%;background:#2E75B6;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#2E75B6;">4.3/10</span></div>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="width:80px;text-align:right;font-size:14px;color:#E8593C;font-weight:700;">B 참가자<br>(상대방)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:83%;height:100%;background:#E8593C;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#E8593C;">8.3/10</span></div>'
+    + '<div style="font-size:13px;color:#555;line-height:2.2;border-top:1px solid #ccc;padding-top:12px;text-align:center;">'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>체류 시간</span><span style="font-weight:700;">B &gt; A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>이동 횟수</span><span style="font-weight:700;">B ≈ A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>학습 지속</span><span style="font-weight:700;">B &gt; A</span></div></div>'
+    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">종합적으로 현재까지 B 참가자가<br>A 참가자보다 <strong style="color:#2E75B6;">더 많은 노력을 기울인</strong> 것으로<br>나타났습니다.</p>';
+    document.getElementById('feedbackTitle').textContent = '과재 노력 정도 비교 결과';
+    fbDiv.style.display = 'block';
+  } else if (condition === 'performance') {
+    fbDiv.innerHTML = '<p style="font-size:15px;color:#555;margin-bottom:20px;">과제 이해도 및 암기도를 분석한 결과</p>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><span style="width:80px;text-align:right;font-size:14px;color:#2E75B6;font-weight:700;">A 참가자<br>(나)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:43%;height:100%;background:#2E75B6;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#2E75B6;">4.3/10</span></div>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;"><span style="width:80px;text-align:right;font-size:14px;color:#E8593C;font-weight:700;">B 참가자<br>(상대방)</span><div style="flex:1;height:28px;background:#e0e0e0;border-radius:6px;overflow:hidden;"><div style="width:83%;height:100%;background:#E8593C;border-radius:6px;"></div></div><span style="width:52px;font-size:15px;font-weight:700;color:#E8593C;">8.3/10</span></div>'
+    + '<div style="font-size:13px;color:#555;line-height:2.2;border-top:1px solid #ccc;padding-top:12px;text-align:center;">'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>학습 효율</span><span style="font-weight:700;">B &gt; A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>암기 정도</span><span style="font-weight:700;">B &gt; A</span></div><br>'
+    + '<div style="display:inline-flex;justify-content:space-between;width:200px;"><span>이해도</span><span style="font-weight:700;">B ≈ A</span></div></div>'
+    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">종합적으로 현재까지 <strong style="color:#E8593C;">B 참가자</strong>가<br>A 참가자보다 <strong style="color:#1B2A4A;">더 잘 외우는</strong> 것으로<br>나타났습니다.</p>';
+    document.getElementById('feedbackTitle').textContent = '과제 수행도 비교 결과';
+    fbDiv.style.display = 'block';
+  }
+
+  document.getElementById('feedbackNextBtn').style.display = 'inline-block';
+  showPage('p_feedback');
+}
+// ========== 조작 점검 저장 ==========
+function saveManipCheck() {
+  var items = ['mc_interest','mc_useful','mc_bored','mc_bored2'];
+  if (condition !== 'control') {
+    items = items.concat(['mc_social1','mc_social2','mc_effort','mc_perf']);
+  } else {
+    items = items.concat(['mc_social_c1','mc_social_c2']);
+  }
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+  showPage('p_set5intro');
+}
+
+function goToSet5() {
+  if (condition !== 'control') {
+    showWaiting();
+  } else {
+    startSet5();
+  }
+}
+
+// ========== 대기 화면 ==========
+function showWaiting() {
+  showPage('p_waiting');
+  var dotFrames = ['●○○','○●○','○○●','○●○'];
+  var dotIdx = 0;
+  var waitDots = setInterval(function() {
+    dotIdx = (dotIdx + 1) % dotFrames.length;
+    document.getElementById('waitingDots').textContent = dotFrames[dotIdx];
+  }, 500);
+
+  var waitMessages = [
+    '상대방의 준비를 기다리는 중...',
+    '잠시만 기다려 주세요...',
+    '잠시만 기다려 주세요...'
+  ];
+  var msgIdx = 0;
+  var waitMsgInterval = setInterval(function() {
+    if (msgIdx < waitMessages.length - 1) {
+      msgIdx++;
+      document.getElementById('waitingMsg').textContent = waitMessages[msgIdx];
+    }
+  }, 2500);
+
+  // 7초 후 세트 5 시작
+  setTimeout(function() {
+    clearInterval(waitDots);
+    clearInterval(waitMsgInterval);
+    startSet5();
+  }, 7000);
+}
+
+// ========== 세트 5 ==========
+var s5cur = 0;
+var s5visited = {};
+var s5start = 0;
+var s5finishEnabled = false;
+var s5interval;
+
+var partnerPatternS5 = [
+  [0,0],[8,0],[9,1],[24,1],[25,2],[35,2],[36,3],[51,3],[52,4],[64,4],
+  [65,5],[80,5],[81,4],[85,4],[86,5],[100,5],[101,6],[116,6],[117,7],[130,7],
+  [131,8],[145,8],[146,7],[150,7],[151,8],[165,8],[166,9],[200,9],
+  [201,7],[210,7],[211,5],[220,5],[221,3],[228,3],[229,1],[238,1],
+  [239,4],[248,4],[249,6],[258,6],[259,8],[268,8],[269,9],[300,9]
+];
+
+
+function startSet5() {
+  s5cur = 0;
+  s5visited = {0:true};
+  s5start = Date.now();
+  s5finishEnabled = false;
+  document.getElementById('s5finish').disabled = true;
+  document.getElementById('s5hint').textContent = '버튼이 활성화되기 전까지 학습을 계속해주시기 바랍니다';
+
+  // dots 생성
+  var dotsHtml = '';
+  for (var i=0;i<10;i++) dotsHtml += '<span class="nav-dot'+(i===0?' active':'')+'"></span>';
+  document.getElementById('s5dots').innerHTML = dotsHtml;
+
+  // 프로그레스 바 표시 (모든 조건에서 나의 바 표시, control은 상대방 숨김)
+  if (condition === 'control') {
+    document.getElementById('progressAreaS5').style.display = 'block';
+    document.getElementById('partnerGroupS5').style.display = 'none';
+    document.getElementById('s5title').style.display = 'block';
+  } else {
+    document.getElementById('progressAreaS5').style.display = 'block';
+   document.getElementById('partnerGroupS5').style.display = 'flex';
+    document.getElementById('s5title').style.display = 'none';
+  }
+
+  s5update();
+  showPage('p_set5');
+
+  if (s5interval) clearInterval(s5interval);
+  s5interval = setInterval(function() {
+    if (condition !== 'control') updatePartnerS5();
+    checkS5Finish();
+  }, 200);
+}
+
+function s5go(idx) {
+  if (idx<0||idx>=10) return;
+  s5cur = idx;
+  s5visited[idx] = true;
+  s5update();
+}
+
+function s5update() {
+  var p = sets[5].pairs[s5cur];
+  document.getElementById('s5word').textContent = p[0];
+  document.getElementById('s5def').textContent = p[1];
+  document.getElementById('s5counter').textContent = (s5cur+1)+' / 10';
+  document.getElementById('s5prev').disabled = (s5cur===0);
+  document.getElementById('s5next').disabled = (s5cur===9);
+
+  var pct = ((s5cur+1)/10)*100;
+  document.getElementById('myProgS5').style.width = pct+'%';
+  document.getElementById('myProgTextS5').textContent = (s5cur+1)+' / 10';
+
+  var dots = document.querySelectorAll('#s5dots .nav-dot');
+  for (var i=0;i<dots.length;i++) {
+    dots[i].className = 'nav-dot';
+    if (i===s5cur) dots[i].className = 'nav-dot active';
+    else if (s5visited[i]) dots[i].className = 'nav-dot visited';
+  }
+}
+
+function updatePartnerS5() {
+  var elapsed = (Date.now()-s5start)/1000;
+  var pairIdx = 0;
+  for (var i=0;i<partnerPatternS5.length;i++) {
+    if (elapsed >= partnerPatternS5[i][0]) pairIdx = partnerPatternS5[i][1];
+  }
+  var pct = ((pairIdx+1)/10)*100;
+  document.getElementById('partnerProgS5').style.width = pct+'%';
+  document.getElementById('partnerProgTextS5').textContent = (pairIdx+1)+' / 10';
+}
+
+function checkS5Finish() {
+  var elapsed = (Date.now()-s5start)/1000;
+  if (!s5finishEnabled && elapsed >= 30) {
+    s5finishEnabled = true;
+    document.getElementById('s5finish').disabled = false;
+    document.getElementById('s5hint').textContent = '학습이 모두 완료되었다면 종료해 주세요';
+  }
+}
+
+function finishSet5() {
+  clearInterval(s5interval);
+  var totalSec = Math.round((Date.now()-s5start)/1000);
+  data.set5_duration = totalSec;
+  data.set5_visited = Object.keys(s5visited).sort().join(',');
+  showPage('p_quizintro');
+}
+
+// ========== 퀴즈 ==========
+// ========== 퀴즈 ==========
+var quizData = [
+  {
+    text: '1. ({1}) — 자기를 광물로 긁거나 갈았을 때 생기는 줄 자국의 고유한 빛깔.',
+    blanks: ['조흔색']
+  },
+  {
+    text: '2. 연륜분석 — 나무의 나이테를 분석하여 과거의 기후를 추정하는 고기후학(古氣候學)의 한 방법. 나이테의 폭은 ({1}), 나무의 ({2}) 등 기후 이외의 인자에도 영향을 받기 때문에 분석에 신중을 기하여야 한다.',
+    blanks: ['토양','나이']
+  },
+  {
+    text: '3. 추재 — 늦여름부터 늦가을 동안에 형성되는 목질의 부분. 나이테의 ({1}) 부분으로 재목의 질이 치밀하다.',
+    blanks: ['둘레']
+  },
+  {
+    text: '4. ({1}) — 가소성 물질이 물러서 임의의 모양으로 바꿀 수 있는 상태로부터 고체로 넘어가는 무르기의 한계.',
+    blanks: ['소성한계']
+  },
+  {
+    text: '5. 편석 — ({1})이나 합금이 응고할 때 ({2}) 조성이 고르지 않게 되는 현상.',
+    blanks: ['금속','화학적']
+  },
+  {
+    text: '6. ({1}) — 출구가 땅 밖으로 직접 나지 않고 수평 갱도로 나 있는 수직 갱도',
+    blanks: ['맹수갱']
+  },
+  {
+    text: '7. 엽리 — ({1}) 모양의 광물이 나란하게 배열되어 나타나는 구조. ({2})에 잘 나타난다.',
+    blanks: ['널빤지','변성암']
+  },
+  {
+    text: '8. 전리용압 — 금속을 그 금속염 수용액에 담글 때, 금속이 ({1})으로 되어 녹아 나오려고 하는 경향. 철·({2})따위는 강하며, 금·백금 따위는 약하다.',
+    blanks: ['이온','아연']
+  },
+  {
+    text: '9. 전단대 — ({1}) 때문에 암석이 부스러지면서 형성된 ({2})들이 나란하게 배열되어 있는 구간.',
+    blanks: ['전단 응력','작은 틈']
+  },
+  {
+    text: '10. ({1}) — 나무를 벤 뒤에 남은 그루터기에서 난 싹을 기른 수풀.',
+    blanks: ['맹아림']
+  }
+  
+];
+
+function buildQuiz() {
+  var h = '';
+  var blankIdx = 0;
+  for (var i = 0; i < quizData.length; i++) {
+    var q = quizData[i];
+    var rendered = q.text;
+    for (var b = 0; b < q.blanks.length; b++) {
+      blankIdx++;
+      var inputHtml = '<input type="text" class="quiz-input" id="quiz_' + blankIdx + '" placeholder="빈칸 ' + blankIdx + '" style="display:inline-block;width:150px;margin:4px 2px;padding:8px 12px;font-size:15px;">';
+      rendered = rendered.replace('{' + (b + 1) + '}', inputHtml);
+    }
+    h += '<div class="question">';
+    h += '<div class="quiz-def">' + rendered + '</div>';
+    h += '</div>';
+  }
+  document.getElementById('quizItems').innerHTML = h;
+}
+
+function saveQuiz() {
+  var blankIdx = 0;
+  var correct = 0;
+  var total = 0;
+  for (var i = 0; i < quizData.length; i++) {
+    for (var b = 0; b < quizData[i].blanks.length; b++) {
+      blankIdx++;
+      total++;
+      var ans = document.getElementById('quiz_' + blankIdx).value.trim();
+      data['quiz_blank_' + blankIdx + '_answer'] = ans;
+      data['quiz_blank_' + blankIdx + '_correct'] = quizData[i].blanks[b];
+      if (ans === quizData[i].blanks[b]) correct++;
+    }
+  }
+  data.quiz_correct = correct;
+  data.quiz_total = total;
+
+  if (condition !== 'control') {
+    document.getElementById('postSocialDiv').style.display = 'block';
+  } else {
+    document.getElementById('postSocialControlDiv').style.display = 'block';
+  }
+  showPage('p_post1');
+}
+
+// ========== Google Sheets 전송 ==========
+function sendToGoogleSheets() {
+  var url = 'https://script.google.com/macros/s/AKfycbzu02jsUwoFqWqylrOy6D0GY3kTsyQeGrZ85b7hfUrwgYmsNayVuE13i719eNE67ZVL/exec';
+  data.timestamp = new Date().toLocaleString('ko-KR');
+  fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify(data)
+  });
+}
+
+// ========== 사후 설문 ==========
+function savePost1() {
+  var items = ['self_effort','self_perf'];
+  if (condition !== 'control') {
+    items = ['social1','social2','social3','social4','self_effort','self_perf'];
+  } else {
+    items = ['social_c1','social_c2','social_c3','social_c4','self_effort','self_perf'];
+  }
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+  if (condition !== 'control') {
+    document.getElementById('postCompDiv').style.display = 'block';
+    showPage('p_post2');
+  } else {
+    showPage('p_post4');
+  }
+}
+function savePost2() {
+  var items = [];
+  if (condition !== 'control') {
+    items = ['effort_comp','perf_comp'];
+  }
+  if (items.length > 0 && !checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  if (items.length > 0) saveRs(items);
+  if (condition !== 'control') {
+    document.getElementById('postFneDiv').style.display = 'block';
+  }
+  showPage('p_post3');
+}
+function savePost3() {
+  var items = [];
+  if (condition !== 'control') {
+    items = ['fne1','fne2','fne3','fne4','fne5','fne6','fne7','fne8'];
+  }
+  if (items.length > 0 && !checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  if (items.length > 0) saveRs(items);
+  showPage('p_post4');
+}
+
+function savePost4() {
+  var items = ['value1','value2','value3','value4','value5','value6'];
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+  showPage('p_post5');
+}
+function savePost() {
+  var items = ['reeng1','reeng2','prior_k'];
+  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(items);
+  data.condition = condition;
+  showPage('p_followup');
+}
+
+function saveFollowup() {
+  if (!getR('extra_study')) { alert('응답해 주세요.'); return; }
+  data.extra_study = getR('extra_study');
+  showPage('p_phone_confirm');
+}
+
+
+// ========== 핸드폰 뒷 4자리 재확인 저장 ==========
+function savePhoneConfirm() {
+  var v = document.getElementById('inp_phone_confirm').value.trim();
+  if (!/^[0-9]{4}$/.test(v)) { alert('핸드폰 번호 뒷 4자리를 숫자로 입력해 주세요.'); return; }
+  data.phone_last4_confirm = v;
+  sendToGoogleSheets();
+  downloadCSV();
+  showPage('p_end');
+}
+
+// ========== CSV 다운로드 ==========
+function downloadCSV() {
+  var keys = Object.keys(data);
+  var header = keys.join(',');
+  var values = keys.map(function(k){ return '"'+String(data[k]).replace(/"/g,'""')+'"'; }).join(',');
+  var csv = header + '\n' + values;
+  var blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8;'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'experiment_data_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+} 
+
+// ========== 초기화 ==========
+buildQuiz();
+</script>
+</body>
+</html>
