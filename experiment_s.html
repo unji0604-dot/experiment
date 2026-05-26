@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사전 설문 – 학습 경험 연구</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    background: #f0f2f5;
+    padding: 40px 20px;
+  }
+  .page {
+    display: none;
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    width: 720px;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  }
+  .page.active { display: block; }
+  h2 { font-size: 22px; margin-bottom: 8px; color: #1B2A4A; }
+  .subtitle { font-size: 14px; color: #888; margin-bottom: 28px; line-height: 1.6; }
+  p { margin-bottom: 16px; line-height: 1.7; color: #333; font-size: 15px; }
+  .question { margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #f0f0f0; }
+  .question:last-of-type { border-bottom: none; }
+  .question-text { font-size: 15px; color: #333; margin-bottom: 12px; line-height: 1.5; }
+  .likert5 { display: flex; gap: 6px; }
+  .likert5 label { flex: 1; text-align: center; padding: 10px 2px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+  .likert5 label:hover { border-color: #aaa; }
+  .likert5 input[type="radio"] { display: none; }
+  .likert7 { display: flex; gap: 4px; }
+  .likert7 label { flex: 1; text-align: center; padding: 10px 2px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.2s; line-height: 1.4; }
+  .likert7 label:hover { border-color: #aaa; }
+  .likert7 input[type="radio"] { display: none; }
+  .likert5 label:has(input[type="radio"]:checked),
+  .likert7 label:has(input[type="radio"]:checked) {
+    background: #2E75B6; color: white; border-color: #2E75B6;
+  }
+  .likert5 label:has(input[type="radio"]:checked) span,
+  .likert7 label:has(input[type="radio"]:checked) span {
+    color: white; display: block;
+  }
+  .radio-group { display: flex; flex-direction: column; gap: 8px; }
+  .radio-group label { padding: 10px 16px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; color: #555; cursor: pointer; transition: all 0.2s; }
+  .radio-group label:hover { border-color: #aaa; }
+  .radio-group input[type="radio"] { display: none; }
+  .radio-group label:has(input[type="radio"]:checked) {
+    background: #2E75B6; color: white; border-color: #2E75B6;
+  }
+  .radio-group label:has(input[type="radio"]:checked) span { color: white; font-weight: 700; }
+  .text-input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; font-family: 'Noto Sans KR', sans-serif; margin-top: 4px; }
+  .text-input:focus { outline: none; border-color: #2E75B6; }
+  .btn { padding: 14px 40px; background: #2E75B6; color: white; border: none; border-radius: 10px; font-size: 16px; font-family: 'Noto Sans KR', sans-serif; font-weight: 500; cursor: pointer; margin-top: 20px; transition: all 0.2s; }
+  .btn:hover { background: #1a5a96; }
+  .btn:disabled { background: #ccc; color: #999; cursor: not-allowed; }
+  .page-indicator { font-size: 12px; color: #bbb; text-align: right; margin-bottom: 16px; }
+  .info-box { background: #f0f7ff; border-left: 4px solid #2E75B6; padding: 20px; border-radius: 0 8px 8px 0; margin-bottom: 20px; line-height: 1.7; }
+  /* 섹션 구분선 */
+  .section-divider { border: none; border-top: 2px dashed #e0e0e0; margin: 20px 0 24px; }
+  .section-label { font-size: 13px; color: #999; margin-bottom: 16px; font-weight: 500; }
+  /* 완료 화면 링크 박스 */
+  .link-box { background: #f8f9fb; border: 1px solid #e0e0e0; border-radius: 10px; padding: 20px 24px; margin-bottom: 16px; }
+  .link-box .cond-label { font-size: 13px; color: #888; margin-bottom: 6px; }
+  .link-box a { font-size: 15px; color: #2E75B6; font-weight: 600; word-break: break-all; text-decoration: none; }
+  .link-box a:hover { text-decoration: underline; }
+  .pid-badge { display: inline-block; background: #1B2A4A; color: white; font-size: 18px; font-weight: 700; letter-spacing: 3px; padding: 10px 24px; border-radius: 8px; margin: 12px 0 20px; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 페이지 1: 연구 안내 ==================== -->
+<div class="page active" id="p_intro">
+  <h2>연구 참여 안내</h2>
+  <div class="subtitle">온라인 자료 확인 경험 연구 – 사전 설문</div>
+  <p>안녕하세요. 본 연구에 참여해 주셔서 감사합니다.</p>
+  <p>이 연구는 온라인 환경에서 정보 자료를 확인할 때의 사용 경험을 알아보기 위한 연구입니다.</p>
+  <p>먼저 몇 가지 사전 설문에 응답해 주신 후, 실험자의 안내에 따라 본 실험이 진행됩니다.</p>
+  <button class="btn" onclick="showPage('p_phone')">시작하기</button>
+</div>
+
+<!-- ==================== 참가자 ID (핸드폰 뒷 4자리) ==================== -->
+<div class="page" id="p_phone">
+  <h2>참가자 확인</h2>
+  <div class="subtitle">설문 데이터 연결을 위해 핸드폰 번호 뒷 4자리를 입력해 주세요.<br>연구 이외의 목적으로 사용되지 않습니다.</div>
+  <div class="question">
+    <div class="question-text">핸드폰 번호 뒷 4자리</div>
+    <input type="text" class="text-input" id="inp_phone" placeholder="예: 1234" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+  </div>
+  <button class="btn" onclick="savePhone()">다음</button>
+</div>
+
+<!-- ==================== BPS 1~6 ==================== -->
+<div class="page" id="p_bps1">
+  <div class="page-indicator">사전 설문 1 / 7</div>
+  <h2>다음은 개인 성향에 대한 질문입니다 (1/2)</h2>
+  <div class="subtitle">각 문항을 읽고 본인에게 얼마나 해당되는지 표시해 주세요.</div>
+  <div id="bps1_items"></div>
+  <button class="btn" onclick="saveRadioPage(['bps1','bps2','bps3','bps4','bps5','bps6'],'p_bps2')">다음</button>
+</div>
+
+<!-- ==================== BPS 7~12 ==================== -->
+<div class="page" id="p_bps2">
+  <div class="page-indicator">사전 설문 2 / 7</div>
+  <h2>다음은 개인 성향에 대한 질문입니다 (2/2)</h2>
+  <div class="subtitle">각 문항을 읽고 본인에게 얼마나 해당되는지 표시해 주세요.</div>
+  <div id="bps2_items"></div>
+  <button class="btn" onclick="saveRadioPage(['bps7','bps8','bps9','bps10','bps11','bps12'],'p_incom')">다음</button>
+</div>
+
+<!-- ==================== INCOM ==================== -->
+<div class="page" id="p_incom">
+  <div class="page-indicator">사전 설문 3 / 7</div>
+  <h2>다음은 개인 성향에 대한 질문입니다</h2>
+  <div class="subtitle">대부분의 사람들은 자신의 "생각, 의견, 능력 그리고 상황"을 때때로 다른 사람과 비교합니다. 이렇게 비교하는 것에 대해 특별히 '맞고 틀리는' 것이 있다고 할 수 없고, 상대적으로 이런 성향은 사람마다 그 정도가 다양합니다. 각 문항을 읽고 본인에게 얼마나 해당되는지 표시해 주세요.</div>
+  <div id="incom_items"></div>
+  <button class="btn" onclick="saveRadioPage(['sco1','sco2','sco3','sco4','sco5','sco6','sco7','sco8','sco9','sco10','sco11'],'p_agq')">다음</button>
+</div>
+
+<!-- ==================== AGQ-R ==================== -->
+<div class="page" id="p_agq">
+  <div class="page-indicator">사전 설문 4 / 7</div>
+  <h2>다음은 학업과 관련된 질문입니다</h2>
+  <div class="subtitle">각 문항을 읽고 본인에게 얼마나 해당되는지 표시해 주세요.</div>
+  <div id="agq_items"></div>
+  <button class="btn" onclick="saveRadioPage(['map1','map2','map3','mav1','mav2','mav3','pap1','pap2','pap3','pav1','pav2','pav3'],'p_grit')">다음</button>
+</div>
+
+<!-- ==================== 그릿 ==================== -->
+<div class="page" id="p_grit">
+  <div class="page-indicator">사전 설문 5 / 7</div>
+  <h2>다음은 개인 성향에 대한 질문입니다</h2>
+  <div class="subtitle">각 문항을 읽고 본인에게 얼마나 해당되는지 표시해 주세요.</div>
+  <div id="grit_items"></div>
+  <button class="btn" onclick="saveRadioPage(['grit_ci1','grit_ci2','grit_ci3','grit_ci4','grit_ci5','grit_ci6','grit_pe1','grit_pe2','grit_pe3','grit_pe4','grit_pe5','grit_pe6'],'p_mood')">다음</button>
+</div>
+
+<!-- ==================== 기분 ==================== -->
+<div class="page" id="p_mood">
+  <div class="page-indicator">사전 설문 6 / 7</div>
+  <h2>현재 기분 상태</h2>
+  <div class="subtitle">현재 느끼는 기분에 대해 응답해 주세요.</div>
+  <div class="question">
+    <div class="question-text">현재 기분이 어떻습니까? (1=매우 부정적 / 7= 매우 긍정적)</div>
+    <div class="likert7">
+      <label><input type="radio" name="mood_v" value="1"><span>1<br><small>매우 부정적</small></span></label>
+      <label><input type="radio" name="mood_v" value="2"><span>2</span></label>
+      <label><input type="radio" name="mood_v" value="3"><span>3</span></label>
+      <label><input type="radio" name="mood_v" value="4"><span>4<br><small>보통</small></span></label>
+      <label><input type="radio" name="mood_v" value="5"><span>5</span></label>
+      <label><input type="radio" name="mood_v" value="6"><span>6</span></label>
+      <label><input type="radio" name="mood_v" value="7"><span>7<br><small>매우 긍정적</small></span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">현재 얼마나 활력을 느끼십니까? (1=전혀 느끼지 않음 / 7=매우 느낌)</div>
+    <div class="likert7">
+      <label><input type="radio" name="mood_a" value="1"><span>1<br><small>전혀</small></span></label>
+      <label><input type="radio" name="mood_a" value="2"><span>2</span></label>
+      <label><input type="radio" name="mood_a" value="3"><span>3</span></label>
+      <label><input type="radio" name="mood_a" value="4"><span>4<br><small>보통</small></span></label>
+      <label><input type="radio" name="mood_a" value="5"><span>5</span></label>
+      <label><input type="radio" name="mood_a" value="6"><span>6</span></label>
+      <label><input type="radio" name="mood_a" value="7"><span>7<br><small>매우</small></span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="saveRadioPage(['mood_v','mood_a'],'p_demo')">다음</button>
+</div>
+
+<!-- ==================== 기본 정보 ==================== -->
+<div class="page" id="p_demo">
+  <div class="page-indicator">사전 설문 7 / 7</div>
+  <h2>기본 정보</h2>
+  <div class="subtitle">다음은 기본 정보에 대한 질문입니다.</div>
+  <div class="question">
+    <div class="question-text">성별</div>
+    <div class="radio-group">
+      <label><input type="radio" name="gender" value="male"><span>남자</span></label>
+      <label><input type="radio" name="gender" value="female"><span>여자</span></label>
+      <label><input type="radio" name="gender" value="other"><span>밝히지 않음</span></label>
+    </div>
+  </div>
+  <div class="question">
+    <div class="question-text">출생연도 (예: 2005)</div>
+    <input type="text" class="text-input" id="inp_birth" placeholder="출생연도를 입력해 주세요">
+  </div>
+  <div class="question">
+    <div class="question-text">전공 (예: 교육학과)</div>
+    <input type="text" class="text-input" id="inp_major" placeholder="전공을 입력해 주세요">
+  </div>
+  <div class="question">
+    <div class="question-text">학년</div>
+    <div class="radio-group" id="gradeGroup">
+      <label><input type="radio" name="grade" value="1"><span>1학년</span></label>
+      <label><input type="radio" name="grade" value="2"><span>2학년</span></label>
+      <label><input type="radio" name="grade" value="3"><span>3학년</span></label>
+      <label><input type="radio" name="grade" value="4"><span>4학년</span></label>
+      <label><input type="radio" name="grade" value="etc"><span>기타</span></label>
+    </div>
+  </div>
+  <div id="gradeEtcBox" style="display:none;margin-top:-16px;margin-bottom:24px;">
+    <input type="text" class="text-input" id="inp_grade_etc" placeholder="구체적으로 적어주세요 (예: 휴학생)">
+  </div>
+  <button class="btn" onclick="saveDemo()">제출</button>
+</div>
+
+<!-- ==================== 완료 화면 ==================== -->
+<div class="page" id="p_done">
+  <div style="text-align:center;padding:60px 20px;">
+    <div style="font-size:48px;margin-bottom:20px;">✓</div>
+    <h2 style="margin-bottom:16px;">사전 설문이 완료되었습니다</h2>
+    <p style="color:#555;line-height:1.8;">수고하셨습니다.<br>잠시 자리에서 기다려 주세요.<br>실험자가 다음 안내를 드릴 것입니다.</p>
+  </div>
+</div>
+
+<!-- ================================================================ -->
+<!-- JAVASCRIPT -->
+<!-- ================================================================ -->
+<script>
+// ========== 데이터 ==========
+var data = {};
+
+// ========== 구글시트 URL ==========
+// 사전 설문용 시트 — 실험파일과 동일한 URL 사용 가능 (같은 Apps Script로 처리)
+var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzu02jsUwoFqWqylrOy6D0GY3kTsyQeGrZ85b7hfUrwgYmsNayVuE13i719eNE67ZVL/exec';
+
+// ========== 설문 문항 ==========
+var bpsItems = [
+  ['bps1','나는 활동에 집중하기 쉽다'],
+  ['bps2','나는 나 스스로를 즐겁게 하는 것이 쉽다고 생각한다'],
+  ['bps3','나는 하는 일에서 대부분 즐거움을 얻는다'],
+  ['bps4','나는 어떤 상황에서도 흥미를 끌 수 있는 것을 찾을 수 있다'],
+  ['bps5','많은 사람들이 나를 창의적이거나 상상력이 풍부하다고 말한다'],
+  ['bps6','나는 친구들 중에서 가장 오래 지속적으로 무언가를 하는 사람이다'],
+  ['bps7','나는 다른 사람의 홈 비디오나 여행 슬라이드를 보는 것이 지루하다'],
+  ['bps8','내가 해야 하는 일들 중 많은 것들이 반복적이고 단조롭다'],
+  ['bps9','나는 내게 정말로 재미있는 일을 찾는 것이 매우 어렵다'],
+  ['bps10','나는 위험을 감수하고서라도 재미있는 일을 해야 살아있다는 느낌이 든다'],
+  ['bps11','TV나 영화에는 항상 똑같은 것들이 나오는 것 같아 진부한 느낌이 든다'],
+  ['bps12','내가 어렸을 때 나의 일상은 단조롭고 따분한 편이었다']
+];
+
+var incomItems = [
+  ['sco1','나는 종종 사랑하는 이들(애인, 가족 등)의 행동과 타인의 행동을 비교한다'],
+  ['sco2','나는 항상 나의 행동을 타인의 행동과 비교하는 것을 좋아한다'],
+  ['sco3','내가 일을 잘했는지 알고자 할 때, 다른 사람이 한 것과 내가 한 것을 비교한다'],
+  ['sco4','나는 내가 사회성 있게 행동(예, 대인관계, 인기도)하고 있는지 타인과 비교하곤 한다'],
+  ['sco5','나는 다른 사람과 나의 행동을 비교해보는 타입이 아니다'],
+  ['sco6','나는 종종 내가 인생에서 달성한 것과 다른 사람들이 달성한 것을 비교한다'],
+  ['sco7','나는 종종 다양한 의견과 경험을 얻기 위해 타인과 이야기하길 좋아한다'],
+  ['sco8','나는 종종 누군가 나와 비슷한 문제에 직면해 있을 때, 그 사람들이 무슨 생각을 하고 있는지 알고 싶어지곤 한다'],
+  ['sco9','나는 항상 나와 상황(입장)이 비슷한 사람들이라면 어떻게 행동을 했을지 알고 싶다'],
+  ['sco10','무언가를 배우려고 할 때, 이에 대한 타인의 생각을 알려고 한다'],
+  ['sco11','나는 절대 나의 상황을 남들과 비교해서 생각하지 않는다']
+];
+
+var agqItems = [
+  ['map1','나의 목표는 수업에서 배우는 내용을 완벽히 이해하는 것이다'],
+  ['map2','나는 수업에서 배우는 내용을 최대한 완전히 이해하고자 노력한다'],
+  ['map3','나의 목표는 가능한 많이 배우는 것이다'],
+  ['mav1','나는 내가 할 수 있는 것보다 덜 배우는 것을 지양한다'],
+  ['mav2','나는 수업 내용을 완전히 이해하지 못하는 것을 지양하기 위해 노력한다'],
+  ['mav3','나는 배울 수 있는 것보다 덜 배우는 것을 지양한다'],
+  ['pap1','나의 목표는 다른 학생들보다 잘하는 것이다'],
+  ['pap2','나는 다른 친구들보다 좋은 성적을 받기 위해 노력한다'],
+  ['pap3','나의 목표는 다른 친구들보다 높은 점수를 받는 것이다'],
+  ['pav1','나의 목표는 다른 학생들보다 못하는 것을 피하는 것이다'],
+  ['pav2','나는 다른 친구들보다 나쁜 성적을 받지 않기 위해 노력한다'],
+  ['pav3','나의 목표는 다른 친구들보다 낮은 점수를 받지 않는 것이다']
+];
+
+// 그릿 — Consistency of Interest(ci) 6문항 + Perseverance of Effort(pe) 6문항
+var gritItems = [
+  // Consistency of Interest (역채점 문항)
+  ['grit_ci1','나는 목표를 세우지만 나중에 그것과는 다른 일을 하곤 한다'],
+  ['grit_ci2','나는 어떤 생각이나 일에 잠깐 집중하다가 곧 흥미를 잃은 적이 있다'],
+  ['grit_ci3','나는 2-3개월 넘게 걸리는 일에 계속해서 집중하기 어렵다'],
+  ['grit_ci4','때때로 새로운 생각이나 일 때문에 원래 하고 있는 생각이나 일이 방해를 받는다'],
+  ['grit_ci5','나의 관심사는 해마다 바뀐다'],
+  ['grit_ci6','나는 몇 개월마다 새로운 목표에 관심이 생긴다'],
+  // Perseverance of Effort
+  ['grit_pe1','나는 시작한 것은 뭐든지 끝장을 본다'],
+  ['grit_pe2','어려움은 나를 꺾지 못한다'],
+  ['grit_pe3','나는 열심히 사는 사람이다'],
+  ['grit_pe4','나는 끊임없이 노력한다'],
+  ['grit_pe5','나는 수년의 노력이 필요한 목표를 달성한 적이 있다'],
+  ['grit_pe6','나는 중요한 목표를 달성하기 위해 어려움을 극복한 적이 있다']
+];
+
+// ========== 유틸리티 ==========
+function showPage(id) {
+  var pp = document.querySelectorAll('.page');
+  for (var i=0;i<pp.length;i++) pp[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function getR(name) {
+  var el = document.querySelector('input[name="'+name+'"]:checked');
+  return el ? el.value : null;
+}
+
+function checkRs(names) {
+  for (var i=0;i<names.length;i++) { if (!getR(names[i])) return false; }
+  return true;
+}
+
+function saveRs(names) {
+  for (var i=0;i<names.length;i++) data[names[i]] = getR(names[i]);
+}
+
+function saveRadioPage(names, nextPage) {
+  if (!checkRs(names)) { alert('모든 문항에 응답해 주세요.'); return; }
+  saveRs(names);
+  showPage(nextPage);
+}
+
+// 리커트 5점 문항 HTML 생성
+function makeLikert5(name, text, num, labels) {
+  if (!labels) labels = ['전혀<br>그렇지 않다','그렇지<br>않다','보통이다','그렇다','매우<br>그렇다'];
+  var html = '<div class="question"><div class="question-text">'+num+'. '+text+'</div><div class="likert5">';
+  for (var i=1;i<=5;i++) {
+    html += '<label><input type="radio" name="'+name+'" value="'+i+'"><span>'+labels[i-1]+'</span></label>';
+  }
+  html += '</div></div>';
+  return html;
+}
+
+
+// ========== 핸드폰 뒷 4자리 저장 ==========
+function savePhone() {
+  var v = document.getElementById('inp_phone').value.trim();
+  if (!/^[0-9]{4}$/.test(v)) { alert('핸드폰 번호 뒷 4자리를 숫자로 입력해 주세요.'); return; }
+  data.phone_last4 = v;
+  showPage('p_bps1');
+}
+
+// ========== 문항 동적 생성 ==========
+function buildSurveyItems() {
+  var h = '';
+  for (var i=0;i<6;i++) h += makeLikert5(bpsItems[i][0], bpsItems[i][1], i+1);
+  document.getElementById('bps1_items').innerHTML = h;
+
+  h = '';
+  for (var i=6;i<12;i++) h += makeLikert5(bpsItems[i][0], bpsItems[i][1], i+1);
+  document.getElementById('bps2_items').innerHTML = h;
+
+  h = '';
+  for (var i=0;i<incomItems.length;i++) h += makeLikert5(incomItems[i][0], incomItems[i][1], i+1);
+  document.getElementById('incom_items').innerHTML = h;
+
+  h = '';
+  for (var i=0;i<agqItems.length;i++) h += makeLikert5(agqItems[i][0], agqItems[i][1], i+1);
+  document.getElementById('agq_items').innerHTML = h;
+
+  // 그릿 문항 — CI 6문항 / PE 6문항 섹션 구분
+  h = '<div class="section-label">※ 다음 문항들에 대해 본인에게 해당하는 정도를 표시해 주세요.</div>';
+  for (var i=0;i<6;i++) h += makeLikert5(gritItems[i][0], gritItems[i][1], i+1);
+  h += '<hr class="section-divider">';
+  for (var i=6;i<12;i++) h += makeLikert5(gritItems[i][0], gritItems[i][1], i+1);
+  document.getElementById('grit_items').innerHTML = h;
+}
+
+// ========== 기본정보 ==========
+document.getElementById('gradeGroup').addEventListener('change', function(e) {
+  document.getElementById('gradeEtcBox').style.display = e.target.value === 'etc' ? 'block' : 'none';
+});
+
+
+function saveDemo() {
+  if (!getR('gender')) { alert('성별을 선택해 주세요.'); return; }
+  var b = document.getElementById('inp_birth').value.trim();
+  var m = document.getElementById('inp_major').value.trim();
+  if (!b) { alert('출생연도를 입력해 주세요.'); return; }
+  if (!m) { alert('전공을 입력해 주세요.'); return; }
+  if (!getR('grade')) { alert('학년을 선택해 주세요.'); return; }
+  if (getR('grade')==='etc') {
+    var ge = document.getElementById('inp_grade_etc').value.trim();
+    if (!ge) { alert('학년 기타 사항을 입력해 주세요.'); return; }
+    data.grade_etc = ge;
+  }
+  data.gender = getR('gender');
+  data.birth_year = b;
+  data.major = m;
+  data.grade = getR('grade');
+
+  // 타임스탬프
+  data.timestamp = new Date().toLocaleString('ko-KR');
+  data.phase = 'pre_survey';
+
+  // 구글시트 전송
+  sendToGoogleSheets();
+
+  // 완료 화면 표시
+  showPage('p_done');
+}
+
+// ========== Google Sheets 전송 ==========
+function sendToGoogleSheets() {
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify(data)
+  }).catch(function(e){ console.warn('전송 오류:', e); });
+}
+
+// ========== 초기화 ==========
+buildSurveyItems();
+</script>
+</body>
+</html>
