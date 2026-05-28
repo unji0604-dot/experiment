@@ -1407,7 +1407,7 @@ function startSet(setNum) {
   showPage('p_study');
 
  // 타이머 (테스트: 10초)
-  var remaining = 0;
+  var remaining = 420;
   document.getElementById('timerDisplay').textContent = '0:' + String(remaining).padStart(2, '0');
 
   if (timerInterval) clearInterval(timerInterval);
@@ -1596,7 +1596,7 @@ function saveSet4Report() {
       clearInterval(wpDots);
       clearInterval(wpMsgInterval);
       startAnalysis();
-    }, 50000);
+    }, 40000);
   }
 }
 
@@ -1726,8 +1726,8 @@ function showFeedbackResult() {
     // === 1단계: 통제 차원 (수행 — 차이 없음) ===
     + '<div style="background:#EDF3F8;border-radius:10px;padding:20px 24px;margin-bottom:24px;">'
     + '<p style="font-size:14px;color:#5A7A9B;margin-bottom:14px;font-weight:600;">▎ 암기 수준(수행) 비교</p>'
-    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;"><span style="width:80px;text-align:right;font-size:13px;color:#5A7A9B;font-weight:600;">A 참가자<br>(나)</span><div style="flex:1;height:22px;background:#d4e3f0;border-radius:5px;overflow:hidden;"><div style="width:55%;height:100%;background:#8BAFC9;border-radius:5px;"></div></div><span style="width:52px;font-size:14px;font-weight:600;color:#5A7A9B;">5.3/10</span></div>'
-    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><span style="width:80px;text-align:right;font-size:13px;color:#5A7A9B;font-weight:600;">B 참가자<br>(상대방)</span><div style="flex:1;height:22px;background:#d4e3f0;border-radius:5px;overflow:hidden;"><div style="width:52%;height:100%;background:#8BAFC9;border-radius:5px;"></div></div><span style="width:52px;font-size:14px;font-weight:600;color:#5A7A9B;">5.5/10</span></div>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;"><span style="width:80px;text-align:right;font-size:13px;color:#5A7A9B;font-weight:600;">A 참가자<br>(나)</span><div style="flex:1;height:22px;background:#d4e3f0;border-radius:5px;overflow:hidden;"><div style="width:53%;height:100%;background:#8BAFC9;border-radius:5px;"></div></div><span style="width:52px;font-size:14px;font-weight:600;color:#5A7A9B;">5.3/10</span></div>'
+    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><span style="width:80px;text-align:right;font-size:13px;color:#5A7A9B;font-weight:600;">B 참가자<br>(상대방)</span><div style="flex:1;height:22px;background:#d4e3f0;border-radius:5px;overflow:hidden;"><div style="width:55%;height:100%;background:#8BAFC9;border-radius:5px;"></div></div><span style="width:52px;font-size:14px;font-weight:600;color:#5A7A9B;">5.5/10</span></div>'
     + '<p style="font-size:14px;color:#5A7A9B;text-align:center;margin:0;">→ 두 참가자의 <strong>암기 수준은 유사</strong>합니다.</p>'
     + '</div>'
     // === 2단계: 조작 차원 (노력 — 차이 부각) ===
