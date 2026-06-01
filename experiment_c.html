@@ -122,26 +122,50 @@
 <body>
 
 <!-- ==================== 커버스토리 ==================== -->
+<!-- ==================== 화면 점검 안내 ==================== -->
+<div class="page" id="p_eyetrack_intro">
+  <div style="text-align:center;padding:60px 20px;">
+    <h2 style="margin-bottom:30px;">화면 점검</h2>
+    <div style="max-width:500px;margin:0 auto;">
+      <div class="info-box" style="text-align:left;">
+        <p>실험 프로그램이 정상적으로 작동하는지 확인하기 위한 <strong>화면 점검</strong> 과정입니다.</p>
+        <br>
+        <p>화면에 나타나는 <strong>점이 부드럽게 이동하는지</strong> 눈으로 확인해 주세요.</p>
+        <br>
+        <p>점검이 진행되는 동안 <strong>머리를 움직이지 말고</strong>, 눈만 움직여 주세요.</p>
+      </div>
+      <button class="btn" style="margin-top:30px;" onclick="startEyeTracking()">점검 시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 화면 점검 화면 ==================== -->
+<div class="page" id="p_eyetrack">
+  <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#1a1a2e;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
+    <div id="calibDot" style="width:20px;height:20px;background:#00d4ff;border-radius:50%;position:absolute;transition:all 0.6s ease-in-out;box-shadow:0 0 15px rgba(0,212,255,0.6);"></div>
+    <div id="fixCross" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;color:#00d4ff;font-weight:300;letter-spacing:2px;">+</div>
+    <div id="eyetrackMsg" style="position:absolute;bottom:80px;color:rgba(255,255,255,0.6);font-size:14px;">점이 부드럽게 이동하는지 확인해 주세요</div>
+    <div style="position:absolute;bottom:40px;width:300px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;">
+      <div id="eyetrackBar" style="width:0%;height:100%;background:#00d4ff;border-radius:2px;transition:width 0.3s;"></div>
+    </div>
+    <div id="eyetrackPct" style="position:absolute;bottom:50px;color:rgba(255,255,255,0.4);font-size:11px;">0%</div>
+  </div>
+</div>
+
+<!-- ==================== 커버스토리 ==================== -->
 <div class="page active" id="p_cover">
   <h2>연구 안내</h2>
 
    <div class="info-box">
-    <p> 본 연구는 온라인 환경에서 다양한 정보를 확인할 때의 어떠한 경험을 하는지 알아보기 위한 연구입니다. </p>
+    <p> 본 연구는 온라인 환경에서 다양한 정보를 확인할 때의 어떠한 정서적 경험을 하는지 알아보기 위한 연구입니다. </p>
     <p> 앞으로 여러분에게 용어-정의 쌍으로 이루어진 자료가 화면에 제시됩니다.</p>
    <p><em>예) 교육 - 지식과 기술 따위를 가르치며 인격을 길러 줌</em></p>
     <br>
-    <p>한 세트는 총 10개의 쌍으로 이루어져 있으며, 여러 세트를 학습하게 됩니다.</p>
     <br>
-    <p>자신만의 방식대로 자유롭게 학습해 주세요. </p>
+    <p>해당 내용에 대한 평가는 없으며, 자신의 내적 경험에 집중하며 <strong>눈으로 보면서 조용히</strong> 자료를 확인해 주세요</p>
     <br>
+    <p> 지시문의 내용을 잘 읽으며 차근차근 진행해 주시면 됩니다.</p>
     <br>
-    <p>해당 내용에 대한 평가는 없으며, 자신의 경험에 집중하며 <strong>눈으로 보면서 조용히</strong> 학습해 주세요</p>
-    <br>
-    <p> 한 세트당 7분 간 학습하게 되며, 제한 시간이 끝나면 화면은 자동으로 넘어갑니다.</p>
-    <br>
-    <br>
-    <br>
-    <p>앞으로 화면에 나오는 안내에 따라 차근차근 진행해 주시면 됩니다.</p>
     <p>실험이 종료된 후에는 실험자가 다시 오기까지 기다려 주세요 </p>
     <br>
     <br>
@@ -149,7 +173,7 @@
   </div>
 
   <p>준비가 되셨으면 아래 버튼을 눌러주세요.</p>
-  <button class="btn" onclick="startSet(1)">시작</button>
+  <button class="btn" onclick="showPage('p_eyetrack_intro')">시작</button>
 </div>
 
 <!-- ==================== 세트 1~3 학습 (공용 템플릿) ==================== -->
@@ -476,123 +500,6 @@
   <button class="btn" onclick="saveSet4Report()">제출</button>
 </div>
 
-<!-- ==================== 세트 4 후: 부정 정서 측정 ==================== -->
-<div class="page" id="p_boredom2">
-  <h2>학습 경험</h2>
-  <div class="subtitle" style="color:#333;font-size:15px;"><u><strong>세트 4</strong></u>를 학습하며 다음의 기분을 얼마나 느꼈는지 표시해 주세요.</div>
-
-  <div class="question">
-    <div class="question-text">1. 지루함</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_boredom" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_boredom" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_boredom" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_boredom" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_boredom" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">2. 따분함</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_dull" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_dull" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_dull" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_dull" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_dull" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">3. 안절부절못함</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_restless" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_restless" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_restless" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_restless" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_restless" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">4. 피곤함</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_tired" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_tired" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_tired" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_tired" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_tired" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">5. 짜증</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_irritated" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_irritated" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_irritated" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_irritated" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_irritated" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">6. 죄책감</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_guilt" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_guilt" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_guilt" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_guilt" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_guilt" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">7. 화</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_anger" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_anger" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_anger" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_anger" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_anger" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">8. 불안</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_anxiety" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_anxiety" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_anxiety" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_anxiety" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_anxiety" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">9. 수치심</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_shame" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_shame" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_shame" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_shame" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_shame" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">10. 절망감</div>
-    <div class="likert5">
-      <label><input type="radio" name="emo2_hopeless" value="1"><span>전혀<br>느끼지 않았다</span></label>
-      <label><input type="radio" name="emo2_hopeless" value="2"><span>조금 밖에<br>느끼지 못했다</span></label>
-      <label><input type="radio" name="emo2_hopeless" value="3"><span>보통이다</span></label>
-      <label><input type="radio" name="emo2_hopeless" value="4"><span>많이<br>느꼈다</span></label>
-      <label><input type="radio" name="emo2_hopeless" value="5"><span>매우 많이<br>느꼈다</span></label>
-    </div>
-  </div>
-
-  <button class="btn" onclick="saveBoredom2()">다음</button>
-</div>
 
 <!-- ==================== 세트 4 후: 상대방 대기 ==================== -->
 <div class="page" id="p_waitPartner">
@@ -713,7 +620,6 @@
   </div>
   
     <button class="btn" onclick="saveManipCheck()">다음</button>
-  </div>
 </div>
 
 <!-- ==================== 세트 5 시작 대기 ==================== -->
@@ -1565,48 +1471,6 @@ function saveSet4Report() {
   }
 }
 
-function saveBoredom2() {
-  var items = ['emo2_boredom','emo2_dull','emo2_restless','emo2_tired',
-               'emo2_irritated','emo2_guilt','emo2_anger','emo2_anxiety',
-               'emo2_shame','emo2_hopeless'];
-  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
-  saveRs(items);
-
-  if (condition === 'control') {
-    // 통제 조건: 본인 응답 패턴만 분석하는 애니메이션
-    startAnalysisControl();
-    return;
-  }
-
-  // 1단계: 상대방 대기 화면
-  showPage('p_waitPartner');
-  var dotFrames = ['●○○','○●○','○○●','○●○'];
-  var dotIdx = 0;
-  var wpDots = setInterval(function() {
-    dotIdx = (dotIdx + 1) % dotFrames.length;
-    document.getElementById('waitPartnerDots').textContent = dotFrames[dotIdx];
-  }, 500);
-
-  var wpMessages = [
-    '잠시만 기다려 주세요...',
-    '상대방을 기다리고 있습니다...',
-    '잠시만 기다려 주세요...'
-  ];
-  var wpMsgIdx = 0;
-  var wpMsgInterval = setInterval(function() {
-    if (wpMsgIdx < wpMessages.length - 1) {
-      wpMsgIdx++;
-      document.getElementById('waitPartnerMsg').textContent = wpMessages[wpMsgIdx];
-    }
-  }, 5000);
-
-  // 15초 후 분석 시작
-  setTimeout(function() {
-    clearInterval(wpDots);
-    clearInterval(wpMsgInterval);
-    startAnalysis();
-  }, 15000);
-}
 
 function startAnalysis() {
   showPage('p_analyzing');
@@ -1640,10 +1504,10 @@ function startAnalysis() {
 function startAnalysisControl() {
   showPage('p_analyzing');
   document.getElementById('analysisTitle').textContent = '학습 패턴을 분석하고 있습니다';
-  var steps = [
+    var steps = [
     { pct: 20, label: '응답 불러오는 중...', detail: '', delay: 3000 },
-    { pct: 45, label: '암기 수준(수행) 분석 중...', detail: '이해도 응답 및 암기 정확도를 분석하고 있습니다.', delay: 4000 },
-    { pct: 70, label: '학습 과정(노력) 분석 중...', detail: '페이지 체류 시간, 이동 패턴, 복습 횟수을 분석하고 있습니다.', delay: 5000 },
+    { pct: 45, label: '학습 경험 응답 분석 중...', detail: '자기 보고 응답을 분석하고 있습니다.', delay: 4000 },
+    { pct: 70, label: '학습 패턴 데이터 분석 중...', detail: '페이지 체류 시간 및 이동 패턴을 분석하고 있습니다.', delay: 5000 },
     { pct: 90, label: '최종 결과 산출 중...', detail: '분석 결과를 정리하고 있습니다.', delay: 2000 },
     { pct: 100, label: '분석 완료', detail: '', delay: 500 }
   ];
@@ -2037,6 +1901,77 @@ function downloadCSV() {
   a.click();
   URL.revokeObjectURL(url);
 } 
+
+
+// ========== 화면 점검 ==========
+function startEyeTracking() {
+  showPage('p_eyetrack');
+  var dot = document.getElementById('calibDot');
+  var cross = document.getElementById('fixCross');
+  var msg = document.getElementById('eyetrackMsg');
+  var bar = document.getElementById('eyetrackBar');
+  var pct = document.getElementById('eyetrackPct');
+  var points = [[50,50],[10,10],[90,10],[90,90],[10,90],[50,10],[90,50],[50,90],[10,50],[30,30],[70,30],[70,70],[30,70],[50,50]];
+  var messages = [{at:0,text:'점이 부드럽게 이동하는지 확인해 주세요'},{at:5,text:'머리를 움직이지 말고 눈만 움직여 주세요'},{at:12,text:'거의 완료되었습니다...'},{at:20,text:'중앙의 표시(+)를 확인해 주세요'},{at:26,text:'화면 상태를 확인하고 있습니다...'}];
+  var totalDuration=30000; var startTime=Date.now(); var pointIdx=0;
+  dot.style.display='block'; cross.style.display='none';
+  dot.style.left=points[0][0]+'vw'; dot.style.top=points[0][1]+'vh';
+  var pointTimer=setInterval(function(){pointIdx++;if(pointIdx<points.length){dot.style.left=points[pointIdx][0]+'vw';dot.style.top=points[pointIdx][1]+'vh';dot.style.transform='scale(1.5)';setTimeout(function(){dot.style.transform='scale(1)';},300);}},1500);
+  setTimeout(function(){clearInterval(pointTimer);dot.style.display='none';cross.style.display='block';},20000);
+  var msgTimer=setInterval(function(){var elapsed=(Date.now()-startTime)/1000;for(var i=messages.length-1;i>=0;i--){if(elapsed>=messages[i].at){msg.textContent=messages[i].text;break;}}},500);
+  var barTimer=setInterval(function(){var elapsed=Date.now()-startTime;var p=Math.min(100,Math.round((elapsed/totalDuration)*100));bar.style.width=p+'%';pct.textContent=p+'%';},200);
+  setTimeout(function(){clearInterval(pointTimer);clearInterval(msgTimer);clearInterval(barTimer);bar.style.width='100%';pct.textContent='100%';cross.style.display='none';msg.textContent='점검 완료! 잠시 후 실험 안내로 이동합니다.';msg.style.color='#00d4ff';setTimeout(function(){startSet(1);},2000);},totalDuration);
+}
+
+function buildScanpathHTML(aColor, bColor, aPct, bPct) {
+  var zones = '<rect x="0" y="0" width="170" height="28" rx="3" fill="#ddd" opacity="0.3"/>'
+    + '<text x="85" y="16" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">진행 바</text>'
+    + '<rect x="10" y="36" width="150" height="24" rx="3" fill="#ddd" opacity="0.3"/>'
+    + '<text x="85" y="51" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">용어</text>'
+    + '<rect x="10" y="68" width="150" height="60" rx="3" fill="#ddd" opacity="0.3"/>'
+    + '<text x="85" y="101" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">정의</text>'
+    + '<rect x="10" y="136" width="150" height="20" rx="3" fill="#ddd" opacity="0.3"/>'
+    + '<text x="85" y="149" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">내비게이션</text>'
+    + '<rect x="40" y="164" width="90" height="20" rx="3" fill="#ddd" opacity="0.3"/>'
+    + '<text x="85" y="177" text-anchor="middle" font-size="9" fill="#999" font-family="sans-serif">종료</text>';
+
+  var refPath = '<polyline points="85,48 60,48 85,48 50,80 90,80 50,95 80,95 120,95 85,110 60,80 100,48 85,48 70,85 110,85 85,105 50,48 85,48 85,90" fill="none" stroke="#1D9E75" stroke-width="1.2" opacity="0.5"/>'
+    + '<circle cx="85" cy="48" r="6" fill="#1D9E75" opacity="0.55"/><circle cx="60" cy="48" r="4.5" fill="#1D9E75" opacity="0.55"/><circle cx="100" cy="48" r="4" fill="#1D9E75" opacity="0.55"/><circle cx="50" cy="48" r="3.5" fill="#1D9E75" opacity="0.55"/>'
+    + '<circle cx="50" cy="80" r="5" fill="#1D9E75" opacity="0.55"/><circle cx="90" cy="80" r="5.5" fill="#1D9E75" opacity="0.55"/><circle cx="60" cy="80" r="4" fill="#1D9E75" opacity="0.55"/>'
+    + '<circle cx="50" cy="95" r="5" fill="#1D9E75" opacity="0.55"/><circle cx="80" cy="95" r="4.5" fill="#1D9E75" opacity="0.55"/><circle cx="120" cy="95" r="4" fill="#1D9E75" opacity="0.55"/>'
+    + '<circle cx="85" cy="110" r="3.5" fill="#1D9E75" opacity="0.55"/><circle cx="110" cy="85" r="4" fill="#1D9E75" opacity="0.55"/><circle cx="70" cy="85" r="4.5" fill="#1D9E75" opacity="0.55"/><circle cx="85" cy="90" r="5" fill="#1D9E75" opacity="0.55"/>'
+    + '<circle cx="85" cy="146" r="2.5" fill="#1D9E75" opacity="0.3"/>';
+
+  var aPath = '<polyline points="85,48 120,14 85,14 50,14 120,14 85,48 70,82 85,146 30,146 85,48 130,14 85,82 40,48 85,174 85,95 150,146 85,48 50,14 85,90 85,14 100,82 85,146 60,95" fill="none" stroke="'+aColor+'" stroke-width="1.2" opacity="0.4"/>'
+    + '<circle cx="85" cy="14" r="5" fill="'+aColor+'" opacity="0.55"/><circle cx="120" cy="14" r="5.5" fill="'+aColor+'" opacity="0.55"/><circle cx="50" cy="14" r="4.5" fill="'+aColor+'" opacity="0.55"/><circle cx="130" cy="14" r="3.5" fill="'+aColor+'" opacity="0.55"/>'
+    + '<circle cx="85" cy="48" r="4" fill="'+aColor+'" opacity="0.55"/><circle cx="40" cy="48" r="3" fill="'+aColor+'" opacity="0.55"/>'
+    + '<circle cx="70" cy="82" r="3.5" fill="'+aColor+'" opacity="0.55"/><circle cx="85" cy="82" r="3" fill="'+aColor+'" opacity="0.55"/><circle cx="100" cy="82" r="2.5" fill="'+aColor+'" opacity="0.55"/>'
+    + '<circle cx="85" cy="95" r="3" fill="'+aColor+'" opacity="0.55"/><circle cx="60" cy="95" r="2.5" fill="'+aColor+'" opacity="0.55"/>'
+    + '<circle cx="85" cy="146" r="4" fill="'+aColor+'" opacity="0.55"/><circle cx="30" cy="146" r="3.5" fill="'+aColor+'" opacity="0.55"/><circle cx="150" cy="146" r="3" fill="'+aColor+'" opacity="0.55"/>'
+    + '<circle cx="85" cy="174" r="3.5" fill="'+aColor+'" opacity="0.55"/><circle cx="85" cy="90" r="2.5" fill="'+aColor+'" opacity="0.55"/>';
+
+  var bPath = '<polyline points="80,48 55,48 95,48 60,78 95,78 55,92 85,92 115,92 80,108 55,78 105,48 80,48 65,85 105,85 80,100 55,48 80,48 80,88 85,146 80,48" fill="none" stroke="'+bColor+'" stroke-width="1.2" opacity="0.5"/>'
+    + '<circle cx="80" cy="48" r="6" fill="'+bColor+'" opacity="0.55"/><circle cx="55" cy="48" r="4.5" fill="'+bColor+'" opacity="0.55"/><circle cx="95" cy="48" r="4.5" fill="'+bColor+'" opacity="0.55"/><circle cx="105" cy="48" r="3.5" fill="'+bColor+'" opacity="0.55"/>'
+    + '<circle cx="60" cy="78" r="5" fill="'+bColor+'" opacity="0.55"/><circle cx="95" cy="78" r="5" fill="'+bColor+'" opacity="0.55"/><circle cx="55" cy="78" r="4" fill="'+bColor+'" opacity="0.55"/>'
+    + '<circle cx="55" cy="92" r="5" fill="'+bColor+'" opacity="0.55"/><circle cx="85" cy="92" r="4.5" fill="'+bColor+'" opacity="0.55"/><circle cx="115" cy="92" r="4" fill="'+bColor+'" opacity="0.55"/>'
+    + '<circle cx="80" cy="108" r="3.5" fill="'+bColor+'" opacity="0.55"/><circle cx="65" cy="85" r="4.5" fill="'+bColor+'" opacity="0.55"/><circle cx="105" cy="85" r="4" fill="'+bColor+'" opacity="0.55"/>'
+    + '<circle cx="80" cy="100" r="4" fill="'+bColor+'" opacity="0.55"/><circle cx="80" cy="88" r="5" fill="'+bColor+'" opacity="0.55"/><circle cx="85" cy="146" r="2.5" fill="'+bColor+'" opacity="0.35"/>';
+
+  var makeSvg = function(paths) {
+    return '<svg width="170" height="195" viewBox="0 0 170 195" style="display:block;margin:0 auto;">' + zones + paths + '</svg>';
+  };
+
+  return '<p style="font-size:13px;color:#555;margin-bottom:14px;font-weight:600;">학습 중 시선이 화면의 어느 영역을 어떤 순서로 이동했는지를 분석하여, 효과적 암기자의 이동 경로와 비교한 결과입니다.<br>원이 클수록 해당 위치에 시선이 오래 머문 것을 의미합니다.</p>'
+    + '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">'
+    + '<div style="background:#f8f9fb;border-radius:8px;padding:12px 10px;text-align:center;"><p style="font-size:11px;font-weight:700;color:#0F6E56;margin:0 0 6px;">효과적 암기 패턴 (기준)</p>' + makeSvg(refPath) + '</div>'
+    + '<div style="background:#f8f9fb;border-radius:8px;padding:12px 10px;text-align:center;"><p style="font-size:11px;font-weight:700;color:'+aColor+';margin:0 0 6px;">A 참가자 (나)</p>' + makeSvg(aPath) + '<p style="font-size:10px;color:#999;margin:8px 0 0;">유사도</p><p style="font-size:20px;font-weight:700;color:'+aColor+';margin:2px 0 0;">'+aPct+'%</p></div>'
+    + '<div style="background:#f8f9fb;border-radius:8px;padding:12px 10px;text-align:center;"><p style="font-size:11px;font-weight:700;color:'+bColor+';margin:0 0 6px;">B 참가자 (상대방)</p>' + makeSvg(bPath) + '<p style="font-size:10px;color:#999;margin:8px 0 0;">유사도</p><p style="font-size:20px;font-weight:700;color:'+bColor+';margin:2px 0 0;">'+bPct+'%</p></div>'
+    + '</div>'
+    + '<div style="background:#f8f9fb;border-radius:8px;padding:12px 16px;margin-top:14px;">'
+    + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;"><span style="width:75px;text-align:right;font-size:12px;color:'+aColor+';font-weight:700;">A (나)</span><div style="flex:1;height:20px;background:#e8e8e8;border-radius:5px;overflow:hidden;"><div style="width:'+aPct+'%;height:100%;background:'+aColor+';border-radius:5px;"></div></div><span style="width:36px;font-size:14px;font-weight:700;color:'+aColor+';">'+aPct+'%</span></div>'
+    + '<div style="display:flex;align-items:center;gap:10px;"><span style="width:75px;text-align:right;font-size:12px;color:'+bColor+';font-weight:700;">B (상대방)</span><div style="flex:1;height:20px;background:#e8e8e8;border-radius:5px;overflow:hidden;"><div style="width:'+bPct+'%;height:100%;background:'+bColor+';border-radius:5px;"></div></div><span style="width:36px;font-size:14px;font-weight:700;color:'+bColor+';">'+bPct+'%</span></div>'
+    + '</div>';
+}
 
 // ========== 초기화 ==========
 buildQuiz();
