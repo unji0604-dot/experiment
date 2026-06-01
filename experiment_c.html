@@ -366,44 +366,7 @@
 </div>
 
 <!-- ==================== 세트 3 후: 자기보고 설문 ==================== -->
-<div class="page" id="p_set3report">
-  <h2>학습 경험</h2>
-  <div class="subtitle" style="color:#333;font-size:15px;">방금까지 학습한 내용에 대해 응답해 주세요</div>
- 
 
-  <div class="question">
-    <div class="question-text">방금 학습한 용어들을 얼마나 외웠다고 생각하나요?</div>
-    <div class="likert5">
-      <label><input type="radio" name="s3_memorize" value="1"><span>전혀<br>못 외움</span></label>
-      <label><input type="radio" name="s3_memorize" value="2"><span>조금<br>외움</span></label>
-      <label><input type="radio" name="s3_memorize" value="3"><span>보통</span></label>
-      <label><input type="radio" name="s3_memorize" value="4"><span>많이<br>외움</span></label>
-      <label><input type="radio" name="s3_memorize" value="5"><span>거의<br>다 외움</span></label>
-    </div>
-  </div>
-
-  <div class="question">
-    <div class="question-text">방금 학습한 용어들의 뜻을 얼마나 이해했다고 생각하나요?</div>
-    <div class="likert5">
-      <label><input type="radio" name="s3_understand" value="1"><span>전혀<br>이해 못함</span></label>
-      <label><input type="radio" name="s3_understand" value="2"><span>조금<br>이해함</span></label>
-      <label><input type="radio" name="s3_understand" value="3"><span>보통</span></label>
-      <label><input type="radio" name="s3_understand" value="4"><span>많이<br>이해함</span></label>
-      <label><input type="radio" name="s3_understand" value="5"><span>거의<br>다 이해함</span></label>
-    </div>
-  </div>
-  <div class="question">
-    <div class="question-text">방금 학습에 얼마나 집중했다고 생각하나요?</div>
-    <div class="likert5">
-      <label><input type="radio" name="s3_focus" value="1"><span>전혀<br>집중 못함</span></label>
-      <label><input type="radio" name="s3_focus" value="2"><span>조금<br>집중함</span></label>
-      <label><input type="radio" name="s3_focus" value="3"><span>보통</span></label>
-      <label><input type="radio" name="s3_focus" value="4"><span>많이<br>집중함</span></label>
-      <label><input type="radio" name="s3_focus" value="5"><span>매우<br>집중함</span></label>
-    </div>
-  </div>
-  <button class="btn" onclick="saveSet3Report()">제출</button>
-</div>
 
 <!-- ==================== 세트 4 지시문 ==================== -->
 <div class="page" id="p_set4intro">
@@ -463,42 +426,6 @@
 </div>
 
 <!-- ==================== 세트 4 후: 자기보고 설문 ==================== -->
-<div class="page" id="p_set4report">
-  <h2>세트 4 학습 경험</h2>
-  <div class="subtitle" style="color:#333;font-size:16px;">방금 학습한 내용에 대해 응답해 주세요.</div>
-
-  <div class="question">
-    <div class="question-text"><u><strong>세트 4</strong></u>에서 학습한 용어들을 얼마나 외웠다고 생각하나요?</div>
-    <div class="likert5">
-      <label><input type="radio" name="s4_memorize" value="1"><span>전혀<br>못 외움</span></label>
-      <label><input type="radio" name="s4_memorize" value="2"><span>조금<br>외움</span></label>
-      <label><input type="radio" name="s4_memorize" value="3"><span>보통</span></label>
-      <label><input type="radio" name="s4_memorize" value="4"><span>많이<br>외움</span></label>
-      <label><input type="radio" name="s4_memorize" value="5"><span>거의<br>다 외움</span></label>
-    </div>
-  </div>
-  <div class="question">
-    <div class="question-text"><u><strong>세트 4</strong></u>에서 학습한 용어들의 뜻을 얼마나 이해했다고 생각하나요?</div>
-    <div class="likert5">
-      <label><input type="radio" name="s4_understand" value="1"><span>전혀<br>이해 못함</span></label>
-      <label><input type="radio" name="s4_understand" value="2"><span>조금<br>이해함</span></label>
-      <label><input type="radio" name="s4_understand" value="3"><span>보통</span></label>
-      <label><input type="radio" name="s4_understand" value="4"><span>많이<br>이해함</span></label>
-      <label><input type="radio" name="s4_understand" value="5"><span>거의<br>다 이해함</span></label>
-    </div>
-  </div>
-  <div class="question">
-    <div class="question-text"><u><strong>세트 4</strong></u> 학습에 얼마나 집중했다고 생각하나요?</div>
-    <div class="likert5">
-      <label><input type="radio" name="s4_focus" value="1"><span>전혀<br>집중 못함</span></label>
-      <label><input type="radio" name="s4_focus" value="2"><span>조금<br>집중함</span></label>
-      <label><input type="radio" name="s4_focus" value="3"><span>보통</span></label>
-      <label><input type="radio" name="s4_focus" value="4"><span>많이<br>집중함</span></label>
-      <label><input type="radio" name="s4_focus" value="5"><span>매우<br>집중함</span></label>
-    </div>
-  </div>
-  <button class="btn" onclick="saveSet4Report()">제출</button>
-</div>
 
 
 <!-- ==================== 세트 4 후: 상대방 대기 ==================== -->
@@ -1319,15 +1246,12 @@ function saveBoredom() {
   if (condition !== 'control') {
     document.getElementById('set4extra').style.display = 'block';
   }
-  showPage('p_set3report');
+  saveSet3Report();
 }
 
 // ========== 세트별 학습 경험 저장 ==========
 
 function saveSet3Report() {
-  var items = ['s3_memorize','s3_understand','s3_focus'];
-  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
-  saveRs(items);
   showPage('p_set4intro');
 }
 
@@ -1431,14 +1355,11 @@ function finishSet4() {
   var totalSec = Math.round((Date.now()-s4start)/1000);
   data.set4_duration = totalSec;
   data.set4_visited = Object.keys(s4visited).sort().join(',');
-  showPage('p_set4report');
+  saveSet4Report();
 }
 
 function saveSet4Report() {
-  var items = ['s4_memorize','s4_understand','s4_focus'];
-  if (!checkRs(items)) { alert('모든 문항에 응답해 주세요.'); return; }
-  saveRs(items);
-
+  
   if (condition === 'control') {
     startAnalysisControl();
   } else {
