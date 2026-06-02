@@ -45,6 +45,13 @@
   .likert10 label { flex: 1; text-align: center; padding: 8px 1px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 11px; color: #888; cursor: pointer; transition: all 0.2s; line-height: 1.3; }
   .likert10 label:hover { border-color: #aaa; }
   .likert10 input[type="radio"] { display: none; }
+  
+  .ox-wrap { display:flex; gap:16px; justify-content:center; margin-top:16px; }
+  .ox-wrap label { display:flex; align-items:center; justify-content:center; width:100px; height:60px; border:2px solid #d0d0d0; border-radius:12px; font-size:22px; font-weight:700; color:#888; cursor:pointer; transition:all 0.2s; }
+  .ox-wrap label:hover { border-color:#2E75B6; color:#2E75B6; }
+  .ox-wrap input[type="radio"] { display:none; }
+  .ox-wrap label:has(input:checked) { border-color:#2E75B6; background:#EEF4FB; color:#2E75B6; }
+
   .likert5 label:has(input[type="radio"]:checked),
 .likert7 label:has(input[type="radio"]:checked),
 .likert10 label:has(input[type="radio"]:checked) {
@@ -461,28 +468,44 @@
   </div>
 </div>
 
-<!-- ==================== 세트 4 후: 피드백 결과 1 (노력 조건: 노력 피드백 먼저) ==================== -->
+<!-- ==================== 세트 4 후: 피드백 결과 1 ==================== -->
 <div class="page" id="p_feedback1">
   <div style="padding:40px 20px;">
-    <h2 id="feedback1Title" style="text-align:center;">학습 데이터 비교 분석 결과</h2>
+    <h2 id="feedback1Title" style="text-align:center;">직전 4세트 비교 분석 결과</h2>
     <div id="feedback1Msg" style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:12px;padding:28px 32px;margin:30px auto;max-width:600px;font-size:18px;font-weight:600;line-height:1.8;color:#1B2A4A;text-align:center;">
     </div>
-    <div style="text-align:center;margin-top:20px;">
+    <div style="text-align:center;margin-top:30px;">
       <button class="btn" onclick="saveFeedback1()">다음</button>
     </div>
   </div>
 </div>
 
-<!-- ==================== 세트 4 후: 피드백 결과 2 (노력 조건: 수행 피드백 두번째) ==================== -->
-<div class="page" id="p_feedback2">
-  <div style="padding:40px 20px;">
-    <h2 id="feedback2Title" style="text-align:center;">학습 데이터 비교 분석 결과</h2>
-    <div id="feedback2Msg" style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:12px;padding:28px 32px;margin:30px auto;max-width:600px;font-size:18px;font-weight:600;line-height:1.8;color:#1B2A4A;text-align:center;">
-    </div>
-    <div style="text-align:center;margin-top:20px;">
-      <button class="btn" onclick="saveFeedback2()">다음</button>
+
+
+<!-- ==================== 조작점검 1 ==================== -->
+<div class="page" id="p_mc1">
+  <h2>학습 경험 설문</h2>
+  <div class="question">
+    <div class="question-text">직전 세트 4에서 옆의 참가자가 나보다 <strong>더 열심히 했다</strong>고 생각한다</div>
+    <div class="likert5" style="justify-content:center;gap:40px;">
+      <label><input type="radio" name="mc_effort" value="1"><span>O</span></label>
+      <label><input type="radio" name="mc_effort" value="0"><span>X</span></label>
     </div>
   </div>
+  <button class="btn" onclick="saveMc1()">다음</button>
+</div>
+
+<!-- ==================== 조작점검 2 ==================== -->
+<div class="page" id="p_mc2">
+  <h2>학습 경험 설문</h2>
+  <div class="question">
+    <div class="question-text">직전 세트 4에서 옆의 참가자가 나보다 <strong>더 잘 암기했다</strong>고 생각한다</div>
+    <div class="likert5" style="justify-content:center;gap:40px;">
+      <label><input type="radio" name="mc_perf" value="1"><span>O</span></label>
+      <label><input type="radio" name="mc_perf" value="0"><span>X</span></label>
+    </div>
+  </div>
+  <button class="btn" onclick="saveMc2()">다음</button>
 </div>
 
 <!-- ==================== 세트 4 피드백 후 조작 점검 (일반 문항) ==================== -->
@@ -490,30 +513,7 @@
   <h2>학습 경험 설문</h2>
   <div class="subtitle" style="color:#333;font-size:18px;">세트 4에서의 학습 경험에 대해 응답해 주세요.</div>
 
-  <div id="mcManipDiv">
     <div class="question">
-      <div class="question-text">세트 4에서 옆의 참가자가 나보다 더 열심히 지속했다고 생각한다</div>
-      <div class="likert5">
-        <label><input type="radio" name="mc_effort" value="1"><span>전혀<br>그렇지 않다</span></label>
-        <label><input type="radio" name="mc_effort" value="2"><span>그렇지<br>않다</span></label>
-        <label><input type="radio" name="mc_effort" value="3"><span>보통이다</span></label>
-        <label><input type="radio" name="mc_effort" value="4"><span>그렇다</span></label>
-        <label><input type="radio" name="mc_effort" value="5"><span>매우<br>그렇다</span></label>
-      </div>
-    </div>
-    <div class="question">
-      <div class="question-text">세트 4에서 옆의 참가자가 나보다 더 암기를 잘 했다고 생각한다</div>
-      <div class="likert5">
-        <label><input type="radio" name="mc_perf" value="1"><span>전혀<br>그렇지 않다</span></label>
-        <label><input type="radio" name="mc_perf" value="2"><span>그렇지<br>않다</span></label>
-        <label><input type="radio" name="mc_perf" value="3"><span>보통이다</span></label>
-        <label><input type="radio" name="mc_perf" value="4"><span>그렇다</span></label>
-        <label><input type="radio" name="mc_perf" value="5"><span>매우<br>그렇다</span></label>
-      </div>
-    </div>
-  </div>
-
-  <div class="question">
     <div class="question-text">세트 4에서 학습한 용어들이 나에게 유용하다고 느껴졌다</div>
     <div class="likert5">
       <label><input type="radio" name="mc_interest" value="1"><span>전혀<br>그렇지 않다</span></label>
@@ -1513,59 +1513,37 @@ function startAnalysisControl() {
 }
 function showFeedbackResult() {
   var fb1Div = document.getElementById('feedback1Msg');
-  var fb2Div = document.getElementById('feedback2Msg');
 
-  if (condition === 'effort') {
-    // feedback1: 노력 피드백 (조작 — B>A, 카드 이동 경로 분석)
-    fb1Div.innerHTML = '<div style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:10px;padding:20px 24px;">'
-    + '<p style="font-size:14px;color:#2E75B6;margin-bottom:14px;font-weight:700;">▎ 학습 과정(노력) 비교 — 카드 이동 경로 분석</p>'
+  // 노력 집단: 노력 피드백(카드이동)만 제시
+  fb1Div.innerHTML = '<div style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:10px;padding:20px 24px;">'
+    + '<p style="font-size:14px;color:#2E75B6;margin-bottom:14px;font-weight:700;">▎ 과제 노력도 분석 결과</p>'
     + buildNavpathHTML(s4NavSeq, '#2E75B6', '#E8593C', 64, 86, s4DwellTimes)
     + '</div>'
     + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">체류 시간 및 카드 이동 경로 분석 결과,<br><strong style="color:#E8593C;">B 참가자</strong>가 A 참가자보다 <strong style="color:#1B2A4A;">더 많은 노력을 기울인</strong> 것으로 나타났습니다.</p>';
-    document.getElementById('feedback1Title').textContent = '학습 데이터 비교 분석 결과';
-
-    // feedback2: 수행 피드백 (비슷 — 53 vs 55)
-    fb2Div.innerHTML = '<div style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:10px;padding:20px 24px;">'
-    + '<p style="font-size:14px;color:#2E75B6;margin-bottom:14px;font-weight:700;">▎ 암기 수준(수행) 비교 — 시선 이동 경로 분석</p>'
-    + buildScanpathHTML('#2E75B6','#E8593C',53,55)
-    + '</div>'
-    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">두 참가자의 시선 이동 경로 유사도가 비슷하여,<br><strong style="color:#1B2A4A;">두 참가자의 암기 수준은 유사한</strong> 것으로 나타났습니다.</p>';
-    document.getElementById('feedback2Title').textContent = '학습 데이터 비교 분석 결과';
-
-  } else if (condition === 'performance') {
-    // feedback1: 수행 피드백 (scanpath, 조작)
-    fb1Div.innerHTML = '<div style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:10px;padding:20px 24px;">'
-    + '<p style="font-size:14px;color:#2E75B6;margin-bottom:14px;font-weight:700;">▎ 암기 수준(수행) 비교 — 시선 이동 경로 분석</p>'
-    + buildScanpathHTML('#2E75B6','#E8593C',53,55)
-    + '</div>'
-    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">B 참가자의 시선 이동 경로가 효과적 암기 패턴과 더 유사하여,<br><strong style="color:#E8593C;">B 참가자</strong>가 A 참가자보다 <strong style="color:#1B2A4A;">더 잘 외우는</strong> 것으로 나타났습니다.</p>';
-    document.getElementById('feedback1Title').textContent = '학습 데이터 비교 분석 결과';
-
-    // feedback2: 노력 피드백 (통제 — 유사)
-    fb2Div.innerHTML = ''
-    + '<div style="background:#EDF3F8;border-radius:10px;padding:20px 24px;">'
-    + '<p style="font-size:14px;color:#5A7A9B;margin-bottom:14px;font-weight:600;">▎ 학습 과정(노력) 비교</p>'
-    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;"><span style="width:80px;text-align:right;font-size:13px;color:#5A7A9B;font-weight:600;">A 참가자<br>(나)</span><div style="flex:1;height:22px;background:#d4e3f0;border-radius:5px;overflow:hidden;"><div style="width:53%;height:100%;background:#8BAFC9;border-radius:5px;"></div></div><span style="width:52px;font-size:14px;font-weight:600;color:#5A7A9B;">5.3/10</span></div>'
-    + '<div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><span style="width:80px;text-align:right;font-size:13px;color:#5A7A9B;font-weight:600;">B 참가자<br>(상대방)</span><div style="flex:1;height:22px;background:#d4e3f0;border-radius:5px;overflow:hidden;"><div style="width:55%;height:100%;background:#8BAFC9;border-radius:5px;"></div></div><span style="width:52px;font-size:14px;font-weight:600;color:#5A7A9B;">5.5/10</span></div>'
-    + '<p style="font-size:14px;color:#5A7A9B;text-align:center;margin:0;">\u2192 두 참가자의 <strong>노력 투입량은 유사</strong>합니다.</p>'
-    + '</div>';
-    document.getElementById('feedback2Title').textContent = '학습 데이터 비교 분석 결과';
-  }
+  document.getElementById('feedback1Title').textContent = '노력 데이터 비교 분석 결과';
 
   showPage('p_feedback1');
 }
 
 function saveFeedback1() {
-  showPage('p_feedback2');
+  showPage('p_mc1');
 }
 
-function saveFeedback2() {
+function saveMc1() {
+  if (!checkRs(['mc_effort'])) { alert('문항에 응답해 주세요.'); return; }
+  saveRs(['mc_effort']);
+  showPage('p_mc2');
+}
+
+function saveMc2() {
+  if (!checkRs(['mc_perf'])) { alert('문항에 응답해 주세요.'); return; }
+  saveRs(['mc_perf']);
   showPage('p_manipcheck');
 }
 
 // ========== 조작 점검 저장 ==========
 function saveManipCheck() {
-  var items = ['mc_effort','mc_perf','mc_interest','mc_useful','mc_bored','mc_bored2'];
+  var items = ['mc_interest','mc_useful','mc_bored','mc_bored2'];
   if (condition !== 'control') {
     items = items.concat(['mc_social1','mc_social2']);
   } else {
@@ -2107,7 +2085,7 @@ var bPath = (Math.abs(aPct - bPct) <= 5) ? bSimPath
     return '<svg width="170" height="195" viewBox="0 0 170 195" style="display:block;margin:0 auto;">' + zones + paths + '</svg>';
   };
 
-  return '<p style="font-size:13px;color:#555;margin-bottom:14px;font-weight:600;">학습 중 시선이 화면의 어느 영역을 어떤 순서로 이동했는지를 분석하여, 10만 건 이상의 학습 데이터에서 도출된 효과적 암기 패턴과 비교한 결과입니다.<br>원이 클수록 해당 위치에 시선이 오래 머문 것을 의미합니다.</p>'
+  return '<p style="font-size:13px;color:#555;margin-bottom:14px;font-weight:600;">학습 중 시선이 화면의 어느 영역을 어떤 순서로 이동했는지를 분석하여, 약 1300 건 이상의 학습 데이터에서 도출된 효과적 암기 패턴과 비교한 결과입니다.<br>원이 클수록 해당 위치에 시선이 오래 머문 것을 의미합니다.</p>'
     + '<div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;">'
     + '<div style="background:#f8f9fb;border-radius:8px;padding:12px 10px;text-align:center;"><p style="font-size:11px;font-weight:700;color:#0F6E56;margin:0 0 6px;">효과적 암기 패턴 (기준)</p>' + makeSvg(refPath) + '</div>'
     + '<div style="background:#f8f9fb;border-radius:8px;padding:12px 10px;text-align:center;"><p style="font-size:11px;font-weight:700;color:'+aColor+';margin:0 0 6px;">A 참가자 (나)</p>' + makeSvg(aPath) + '<p style="font-size:10px;color:#999;margin:8px 0 0;">유사도</p><p style="font-size:20px;font-weight:700;color:'+aColor+';margin:2px 0 0;">'+aPct+'%</p></div>'
