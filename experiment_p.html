@@ -128,39 +128,7 @@
 </head>
 <body>
 
-<!-- ==================== 화면 점검 안내 ==================== -->
-<div class="page" id="p_eyetrack_intro">
-  <div style="text-align:center;padding:60px 20px;">
-    <h2 style="margin-bottom:30px;">화면 점검</h2>
-    <div style="max-width:500px;margin:0 auto;">
-      <div class="info-box" style="text-align:left;">
-        <p>실험 프로그램이 정상적으로 작동하는지 확인하기 위한 <strong>화면 점검</strong> 과정입니다.</p>
-        <br>
-        <p>화면에 나타나는 <strong>점이 부드럽게 이동하는지</strong> 눈으로 확인해 주세요.</p>
-        <br>
-        <p>점검이 진행되는 동안 <strong>머리를 움직이지 말고</strong>, 눈만 움직여 주세요.</p>
-      </div>
-      <button class="btn" style="margin-top:30px;" onclick="startEyeTracking()">점검 시작</button>
-    </div>
-  </div>
-</div>
 
-<!-- ==================== 시선 추적 보정 화면 ==================== -->
-<div class="page" id="p_eyetrack">
-  <div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#1a1a2e;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:9999;">
-    <!-- 보정 점 -->
-    <div id="calibDot" style="width:20px;height:20px;background:#00d4ff;border-radius:50%;position:absolute;transition:all 0.6s ease-in-out;box-shadow:0 0 15px rgba(0,212,255,0.6);"></div>
-    <!-- 십자선 (중앙 고정) -->
-    <div id="fixCross" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:42px;color:#00d4ff;font-weight:300;letter-spacing:2px;">+</div>
-    <!-- 상태 메시지 -->
-    <div id="eyetrackMsg" style="position:absolute;bottom:80px;color:rgba(255,255,255,0.6);font-size:14px;">점이 부드럽게 이동하는지 확인해 주세요</div>
-    <!-- 프로그레스 바 -->
-    <div style="position:absolute;bottom:40px;width:300px;height:4px;background:rgba(255,255,255,0.15);border-radius:2px;">
-      <div id="eyetrackBar" style="width:0%;height:100%;background:#00d4ff;border-radius:2px;transition:width 0.3s;"></div>
-    </div>
-    <div id="eyetrackPct" style="position:absolute;bottom:50px;color:rgba(255,255,255,0.4);font-size:11px;">0%</div>
-  </div>
-</div>
 
 <!-- ==================== 커버스토리 ==================== -->
 <div class="page active" id="p_cover">
@@ -171,6 +139,8 @@
     <p> 앞으로 여러분에게 용어-정의 쌍으로 이루어진 자료가 화면에 제시됩니다.</p>
    <p><em>예) 교육 - 지식과 기술 따위를 가르치며 인격을 길러 줌</em></p>
     <br>
+    <br>
+    <p> 자신만의 방식대로 자유롭게 학습해 주세요 (예, 이해하기, 암기하기) </p>
     <br>
     <p>해당 내용에 대한 평가는 없으며, 자신의 내적 경험에 집중하며 <strong>눈으로 보면서 조용히</strong> 자료를 확인해 주세요</p>
     <br>
@@ -183,7 +153,7 @@
   </div>
 
   <p>준비가 되셨으면 아래 버튼을 눌러주세요.</p>
-  <button class="btn" onclick="showPage('p_eyetrack_intro')">시작</button>
+  <button class="btn" onclick="startSet(1)">시작</button>
 </div>
 
 <!-- ==================== 세트 1~3 학습 (공용 템플릿) ==================== -->
@@ -466,6 +436,21 @@
     </div>
   </div>
 </div>
+
+
+<div class="page" id="p_feedback_intro">
+  <div style="padding:40px 20px;text-align:center;">
+    <h2>암기 수준 비교 결과</h2>
+    <div style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:12px;padding:28px 32px;margin:30px auto;max-width:600px;font-size:16px;line-height:2;color:#1B2A4A;">
+      <p>본교 학생 약 1,700여 명의 학습 데이터를 기반으로<br><strong>장기 기억 전환 모델</strong>을 구축하고 있습니다.</p>
+      <p style="margin-top:16px;">이 모델에서 도출된 <strong>효율적 암기 패턴</strong>과<br>두 참가자의 학습 패턴을 비교 분석하였습니다.</p>
+    </div>
+    <div style="margin-top:30px;">
+      <button class="btn" onclick="showPage('p_feedback1')">결과 확인 →</button>
+    </div>
+  </div>
+</div>
+
 
 <!-- ==================== 세트 4 후: 피드백 결과 1 ==================== -->
 <div class="page" id="p_feedback1">
@@ -1233,7 +1218,7 @@ function startSet(setNum) {
   document.getElementById('studyTable').innerHTML = tbl;
   showPage('p_study');
 
- // 타이머 (테스트: 10초)
+ // 타이머 (테스트: 0초)
   var remaining = 420;
   document.getElementById('timerDisplay').textContent = '0:' + String(remaining).padStart(2, '0');
 
@@ -1381,7 +1366,7 @@ function updatePartner() {
 
 function checkS4Finish() {
   var elapsed = (Date.now()-s4start)/1000;
-  // ★ 테스트시 60을 10으로 변경
+  // ★ 테스트시 30을 0으로 변경
   if (elapsed>=30 && !s4finishEnabled) {
     s4finishEnabled = true;
     document.getElementById('s4finish').disabled = false;
@@ -1453,9 +1438,9 @@ function startAnalysis() {
     steps = [
       { pct: 10, label: '참가자 A 학습 로그 불러오는 중...', detail: '', delay: 3000 },
       { pct: 22, label: '참가자 B 학습 로그 불러오는 중...', detail: '', delay: 3000 },
-      { pct: 38, label: '시선 고정 횟수 비교 중...', detail: '화면 점검 데이터를 기반으로 시선 패턴을 분석하고 있습니다.', delay: 5000 },
-      { pct: 52, label: '용어-정의 간 시선 이동 패턴 분석 중...', detail: '효과적 암기 패턴과의 유사도를 계산하고 있습니다.', delay: 5000 },
-      { pct: 68, label: '두 참가자의 학습 과정(노력) 비교 중...', detail: '페이지 체류 시간, 이동 패턴, 복습 횟수를 비교하고 있습니다.', delay: 5000 },
+      { pct: 38, label: '카드별 체류 시간 비교 중...', detail: '각 카드에서의 학습 시간 분포를 분석하고 있습니다.', delay: 5000 },
+      { pct: 52, label: '카드 이동 패턴 기반 장기 기억 전환율 추정 중...', detail: '1300건 이상의 학습 데이터에서 도출된 장기 파지 패턴과 비교하고 있습니다.', delay: 5000 },
+      { pct: 68, label: '두 참가자의 수행(암기) 수준 비교 중...', detail: '체류 시간, 이동 패턴을 기반으로 장기 기억 전환 가능성을 비교하고 있습니다.', delay: 5000 },
       { pct: 82, label: '두 참가자의 학습 데이터 가중 평균 계산 중...', detail: '종합 데이터를 바탕으로 최종 결과를 산출하고 있습니다.', delay: 4000 },
       { pct: 95, label: '최종 결과 산출 중...', detail: '분석 결과를 정리하고 있습니다.', delay: 2000 },
       { pct: 100, label: '분석 완료', detail: '', delay: 500 }
@@ -1511,15 +1496,15 @@ function startAnalysisControl() {
 function showFeedbackResult() {
   var fb1Div = document.getElementById('feedback1Msg');
 
-  // 수행 집단: 수행 피드백(시선추적)만 제시
+  // 수행 집단: 수행 피드백(카드이동 기반 장기기억 전환율)만 제시
   fb1Div.innerHTML = '<div style="background:#EEF4FB;border:2px solid #2E75B6;border-radius:10px;padding:20px 24px;">'
-    + '<p style="font-size:14px;color:#2E75B6;margin-bottom:14px;font-weight:700;">&#9654; 과제 수행(암기)도 분석 결과</p>'
-    + buildScanpathHTML('#2E75B6','#E8593C',64,86)
+    + '<p style="font-size:14px;color:#2E75B6;margin-bottom:14px;font-weight:700;">&#9654; 과제 암기 정도 분석 결과</p>'
+    + buildNavpathHTML(s4NavSeq, '#2E75B6', '#E8593C', 64, 86, s4DwellTimes, 'performance')
     + '</div>'
-    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">B 참가자의 시선 이동 경로가 효과적 암기 패턴과 더 유사하여,<br><strong style="color:#E8593C;">B 참가자</strong>가 A 참가자보다 <strong style="color:#1B2A4A;">더 잘 외우는</strong> 것으로 나타났습니다.</p>';
-  document.getElementById('feedback1Title').textContent = '수행 데이터 비교 분석 결과';
+    + '<p style="font-size:16px;line-height:1.8;text-align:center;margin-top:28px;">분석 결과, <strong style="color:#E8593C;">B 참가자</strong>가 A 참가자보다 <strong style="color:#1B2A4A;">더 잘 외우고 있는</strong> 것으로 나타났습니다.</p>';
+  document.getElementById('feedback1Title').textContent = '암기 수준 비교 결과';
 
-  showPage('p_feedback1');
+  showPage('p_feedback_intro');
 }
 
 function saveFeedback1() {
@@ -1880,99 +1865,10 @@ function downloadCSV() {
   URL.revokeObjectURL(url);
 } 
 
-// ========== 시선 추적 보정 ==========
-function startEyeTracking() {
-  showPage('p_eyetrack');
-  var dot = document.getElementById('calibDot');
-  var cross = document.getElementById('fixCross');
-  var msg = document.getElementById('eyetrackMsg');
-  var bar = document.getElementById('eyetrackBar');
-  var pct = document.getElementById('eyetrackPct');
 
-  // 보정 포인트 위치 (vw, vh %)
-  var points = [
-    [50,50],[10,10],[90,10],[90,90],[10,90],
-    [50,10],[90,50],[50,90],[10,50],
-    [30,30],[70,30],[70,70],[30,70],
-    [50,50]
-  ];
-
-  var messages = [
-    {at:0, text:'점이 부드럽게 이동하는지 확인해 주세요'},
-    {at:5, text:'머리를 움직이지 말고 눈만 움직여 주세요'},
-    {at:12, text:'거의 완료되었습니다...'},
-    {at:20, text:'중앙의 표시(+)를 확인해 주세요'},
-    {at:26, text:'화면 상태를 확인하고 있습니다...'}
-  ];
-
-  var totalDuration = 30000; // 30초
-  var pointInterval = 1500; // 포인트당 1.5초
-  var startTime = Date.now();
-  var pointIdx = 0;
-
-  // 첫 포인트
-  dot.style.display = 'block';
-  cross.style.display = 'none';
-  dot.style.left = points[0][0] + 'vw';
-  dot.style.top = points[0][1] + 'vh';
-
-  var pointTimer = setInterval(function() {
-    pointIdx++;
-    if (pointIdx < points.length) {
-      dot.style.left = points[pointIdx][0] + 'vw';
-      dot.style.top = points[pointIdx][1] + 'vh';
-      // 도달 시 잠깐 펄스 효과
-      dot.style.transform = 'scale(1.5)';
-      setTimeout(function(){ dot.style.transform = 'scale(1)'; }, 300);
-    }
-  }, pointInterval);
-
-  // 20초 후 중앙 십자선으로 전환
-  setTimeout(function() {
-    clearInterval(pointTimer);
-    dot.style.display = 'none';
-    cross.style.display = 'block';
-  }, 20000);
-
-  // 메시지 업데이트
-  var msgTimer = setInterval(function() {
-    var elapsed = (Date.now() - startTime) / 1000;
-    for (var i = messages.length - 1; i >= 0; i--) {
-      if (elapsed >= messages[i].at) {
-        msg.textContent = messages[i].text;
-        break;
-      }
-    }
-  }, 500);
-
-  // 프로그레스 바 업데이트
-  var barTimer = setInterval(function() {
-    var elapsed = Date.now() - startTime;
-    var p = Math.min(100, Math.round((elapsed / totalDuration) * 100));
-    bar.style.width = p + '%';
-    pct.textContent = p + '%';
-  }, 200);
-
-  // 30초 후 완료
-  setTimeout(function() {
-    clearInterval(pointTimer);
-    clearInterval(msgTimer);
-    clearInterval(barTimer);
-    bar.style.width = '100%';
-    pct.textContent = '100%';
-    cross.style.display = 'none';
-    msg.textContent = '점검 완료! 잠시 후 실험 안내로 이동합니다.';
-    msg.style.color = '#00d4ff';
-    setTimeout(function() {
-      startSet(1);
-    }, 2000);
-  }, totalDuration);
-}
-
-
-function buildNavpathHTML(aSeq, aColor, bColor, aPct, bPct, aDwells) {
+function buildNavpathHTML(aSeq, aColor, bColor, aPct, bPct, aDwells, mode) {
   var refSeq = [0,1,2,1,2,3,2,3,4,3,4,5,4,5,6,5,6,7,8,9];
-  var bHighSeq = [0,1,2,1,2,3,2,3,4,3,4,5,4,5,6,5,6,7,6,7,8,7,8,9];
+  var bHighSeq = [0,1,0,1,2,1,2,3,2,3,2,3,4,3,4,5,4,5,6,5,6,5,6,7,6,7,8,7,8,9,8,9];
   var bSimSeq = aSeq.slice();  // ← 이렇게 교체
   var bSeq = (bPct > 70) ? bHighSeq : bSimSeq;
 
@@ -2027,7 +1923,9 @@ function buildNavpathHTML(aSeq, aColor, bColor, aPct, bPct, aDwells) {
   });
   svgParts += '</svg>';
 
-  var legendHtml = '<p style="font-size:13px;color:#555;margin-bottom:14px;font-weight:600;">학습 중 카드 이동 순서와 체류 시간을 분석하여, 학습자들이 얼마나 학습에 노력을 쏟았는지 비교한 결과입니다.<br>원이 진할수록 해당 카드에 40초 이상 머문 것을, 화살표가 뒤로 꺾일수록 반복 확인한 것을 의미하며, 이를 통해 과제 참여와 지속성을 추론합니다.</p>';
+   var legendHtml = '<div style="font-size:12px;color:#777;line-height:2;margin-bottom:14px;">'
+    + '<span style="font-weight:700;">●</span> 원의 진한 정도 : 해당 카드에 40초 이상 머무름<br>'
+    + '<span style="font-weight:700;">↩</span> 화살표 꺾임 : 이전 카드로 되돌아가 반복 확인</div>';
   var simHtml = '<div style="background:#f8f9fb;border-radius:8px;padding:12px 16px;margin-top:4px;">'
     + '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;"><span style="width:90px;text-align:right;font-size:12px;color:'+aColor+';font-weight:700;">A (나)</span><div style="flex:1;height:20px;background:#e8e8e8;border-radius:5px;overflow:hidden;"><div style="width:'+aPct+'%;height:100%;background:'+aColor+';border-radius:5px;"></div></div><span style="width:40px;font-size:14px;font-weight:700;color:'+aColor+';">'+aPct+'%</span></div>'
     + '<div style="display:flex;align-items:center;gap:10px;"><span style="width:90px;text-align:right;font-size:12px;color:'+bColor+';font-weight:700;">B (상대방)</span><div style="flex:1;height:20px;background:#e8e8e8;border-radius:5px;overflow:hidden;"><div style="width:'+bPct+'%;height:100%;background:'+bColor+';border-radius:5px;"></div></div><span style="width:40px;font-size:14px;font-weight:700;color:'+bColor+';">'+bPct+'%</span></div>'
